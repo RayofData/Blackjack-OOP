@@ -37,17 +37,23 @@ class HumanPlayer(Player):
         pass
 
     def action(self, deck):
-        bet = input("Hit, Stand, or Double Down? ")
-        if bet.lower().startswith("d"):
+        action = input("Hit, Stand, or Double Down? ")
+
+        if action.lower().startswith("d"):
             self.double_down(deck)
-            cards_text = ", ".join(str(card) for card in self.cards)
-            print(cards_text)
-        elif bet.lower().startswith("h"):
+            print(", ".join(str(card) for card in self.cards))
+            return
+
+        while action.lower().startswith("h"):
             self.hit(deck)
-            cards_text = ", ".join(str(card) for card in self.cards)
-            print(cards_text)
-            if sum(card.value for card in self.cards) < 22:
-                bet = input("Hit or Stand? ")
-        else:
-            self.stay()
+            print(", ".join(str(card) for card in self.cards))
+
+            hand_total = sum(card.value for card in self.cards)
+
+            if hand_total >= 21:
+                return
+
+            action = input("Hit or Stand? ")
+
+        self.stay()
     

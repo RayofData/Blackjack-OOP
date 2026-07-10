@@ -41,10 +41,9 @@ for player in table:
             card.state = "show"
             player.receive_card(card)
 
-for player in table:
-    print(player)
 
 for player in table:
+    print(player)
     if player.seat == 1:
         pass
     else:
