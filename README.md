@@ -14,7 +14,9 @@ A simple Blackjack project created to practice object-oriented programming in Py
 ## Classes
 
 * `Card`: Represents a playing card.
+* `Table`: Handles all Players
 * `Player`: Base class for all players.
+* `BettingPlayer`: Base class for Human and NPC players
 * `HumanPlayer`: Handles human betting and actions.
 * `NPCPlayer`: Handles computer-controlled actions.
 * `Dealer`: Represents the dealer.
