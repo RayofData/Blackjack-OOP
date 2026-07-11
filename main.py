@@ -5,7 +5,7 @@ from HumanPlayer import HumanPlayer
 from NPCPlayer import NPCPlayer
 import random
 
-# Creates Deck
+##### Creates Deck #####
 ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
 suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
 values = [2,3,4,5,6,7,8,9,10,10,10,10,11]
@@ -16,35 +16,38 @@ for suit in suits:
         deck.append(Card(ranks[i], suit, values[i], "hidden"))
 
 
-## Dealer
+##### Dealer #####
 dealers = ["Sarah", "Robin", "Kat", "Austin", "Becky"]
 random.shuffle(dealers)
 
 dealer = Dealer(dealers[0]) # seat 1
 table = Table([dealer])
 
-# Welcome
+##### Welcome Message ######
 print("Welcome to Ray's Blackjack!")
-print("This table has four available seats.")
+print("This table has five available seats.")
 
 print("The game ends when you leave the table or run out of money.")
 print("Each player begins with the same starting balance.")
 
-# Starting Pot for everyone
+#### Starting Pot for everyone
 starting_balance = int(
     input("Enter the starting balance for each player: $")
 )
 
+##### Play creation #####
 # Human players
 num_players = int(input("How many human players are joining? "))
 for i in range(num_players):
     name = input("Enter name: ")
-    seat = table.table_size() + 1
+    seat = table.current_table_size() + 1
     player = HumanPlayer(name, seat, starting_balance)
     table.take_seat(player)
+    if len(table.persons) == table.table_size:
+        break
 
 # Npc players
-max_npcs = 5 - num_players
+max_npcs = table.table_size - table.current_table_size()
 num_npcs = int(input(f"How many NPC players are joining? Maximum: {max_npcs} "))
 npc_names = [
     "Alex",
@@ -68,14 +71,15 @@ npc_names = [
     "Rowan",
     "Charlie"
 ]
-shuffled_npc = npc_names
-random.shuffle(shuffled_npc)
+random.shuffle(npc_names)
 
-for i in range(num_npcs):
-    seat = table.table_size() + 1
-    name = shuffled_npc[i]
+i = 0
+while table.current_table_size() < table.table_size and i < num_npcs:
+    seat = table.table_size + 1
+    name = npc_names[i]
     player = NPCPlayer(name, seat, starting_balance)
     table.take_seat(player)
+    i += 1
 
 
 ## Start game loop
@@ -84,7 +88,7 @@ for i in range(num_npcs):
 table.print_table()
 
 # Stars new game with new shuffled deck
-play_deck = deck
+play_deck = deck.copy()
 random.shuffle(play_deck)
 
 # Bet
@@ -103,12 +107,19 @@ for i in range(2):
             card.state = "show"
             current_player.receive_card(card)
 
+# Everyone at table
+table.print_table()
+dealer_seat = table.persons[0]
+
+ace_show = dealer_seat.get_hand_total() == 11
+
+if ace_show:
+    pass # insurance bet
+
+
 # Actions for hit, stay, double down and split
-for i in range(table.table_size()):
+for i in range(1, table.table_size()):
     current_player = table.persons[i]
-    print(table.persons[0])
-    if i == 0:
-        pass
-    else:
-        print(current_player)
-        current_player.action(play_deck)
+    print(dealer_seat)
+    print(current_player)
+    current_player.action(play_deck)
