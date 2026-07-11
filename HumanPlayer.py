@@ -19,17 +19,16 @@ class HumanPlayer(Player):
             if bet < 5:
                 print("Must be an amount of 5 or more.")
             elif bet > self.total:
-                print(f"Bet must be less than total pot of ${player.total}")
+                print(f"Bet must be less than total pot of ${self.total}")
             else:
                 self.bet = bet
                 self.total -= self.bet
 
     def split(self, deck):
-        if len(set(self.cards)) == 1:
-            split = input("Split? Y/N ")
-            if split.lower() == "y":
-                pass
-            # split into two hands and double bet
+        split = input("Split? Y/N ")
+        if split.lower() == "y":
+            pass
+        # split into two hands and double bet
             
     
     def double_down(self, deck):
@@ -37,7 +36,14 @@ class HumanPlayer(Player):
         self.hit(deck)
 
     def action(self, deck):
-        action = input(f"Hand total: {self.get_hand_total()}\nHit, Stand, or Double Down? ")
+
+        if len(self.cards) == 2 and self.cards[0].get_rank() == self.cards[1].get_rank():
+            self.split(deck)
+
+        action = input(
+            f"Hand total: {self.get_hand_total()}\n"
+            "1. Hit\n2. Stand\n3. Double Down\nChoose an action: "
+)
 
         if action.strip().lower().startswith(("d", "3")):
             self.double_down(deck)
@@ -49,5 +55,6 @@ class HumanPlayer(Player):
             if self.get_hand_total() >= 21:
                 return
             action = input("Hit or Stand? ")
+
         self.stay()
     
