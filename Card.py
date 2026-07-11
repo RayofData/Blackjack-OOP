@@ -17,6 +17,11 @@ class Card:
         else:
             return 0
 
+    def get_rank(self):
+        if self.state.lower() == "show".lower():
+            return self.__rank
+        else:
+            return "Hidden"
 
 
 
