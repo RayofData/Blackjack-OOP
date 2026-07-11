@@ -1,3 +1,4 @@
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
 from BettingPlayer import BettingPlayer
 
 class HumanPlayer(BettingPlayer):
@@ -14,9 +15,9 @@ class HumanPlayer(BettingPlayer):
         while self.bet == 0:
             bet = int(input(f"Minimal bet 5\n{self.name} Enter a bet: "))
             if bet < 5:
-                print("Must be an amount of 5 or more.")
+                print(colored_text("Must be an amount of 5 or more.", RED))
             elif bet > self.total:
-                print(f"Bet must be less than total pot of ${self.total}")
+                print(colored_text(f"Bet must be less than total pot of ${self.total}", RED))
             else:
                 self.place_bet(bet)
 
@@ -24,7 +25,7 @@ class HumanPlayer(BettingPlayer):
     def action(self, deck):
 
         if len(self.cards) == 2 and self.cards[0].get_rank() == self.cards[1].get_rank():
-            split = input("Split? Y/N ")
+            split = input(colored_text("Split? Y/N ", YELLOW))
             if split.strip().lower().startswith("y"):
                 self.split(deck)
 
