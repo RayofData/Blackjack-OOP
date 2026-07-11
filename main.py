@@ -89,20 +89,23 @@ for person in table.persons[1:]:
     person.place_bet()
 
 # deal cards
-for i in range(table.table_size()):
-    for j in range(2):
-        if i == 0 and j == 0:
-            player.receive_card(play_deck.pop()) 
+for i in range(2):
+    for j in range(table.table_size()):
+        current_player = table.persons[j]
+        card = play_deck.pop()
+
+        if i == 0 and j == 0: 
+            current_player.receive_card(card) 
         else:
-            card = play_deck.pop()
             card.state = "show"
-            player.receive_card(card)
+            current_player.receive_card(card)
 
 
 
 for i in range(table.table_size()):
     print(table.persons[i])
+    current_player = table.persons[i]
     if i == 0:
         pass
     else:
-        player.action(play_deck)
+        current_player.action(play_deck)

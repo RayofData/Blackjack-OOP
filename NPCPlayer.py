@@ -2,7 +2,10 @@ from Player import Player
 import random
 
 class NPCPlayer(Player):
-    def __init__(self, name, seat, total, cards=[], hand_total=0, bet=0):
+    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0):
+        if cards is None:
+            cards = []
+
         super().__init__(name, cards, seat, hand_total)
         self.total = total
         self.bet = bet
@@ -20,11 +23,12 @@ class NPCPlayer(Player):
         self.receive_card(deck.pop())
 
     def action(self, deck):
-        if sum(self.cards.values) < 9:
+        hand_total = self.get_hand_total()
+        if hand_total < 9:
             self.hit(deck)
-        elif sum(self.cards.values) < 12:
+        elif hand_total < 12:
             self.double_down(deck)
-        elif sum(self.cards.values) < 16:
+        elif hand_total < 16:
             self.hit(deck)
         else:
             self.stay() 

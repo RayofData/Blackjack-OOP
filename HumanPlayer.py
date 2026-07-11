@@ -1,7 +1,10 @@
 from Player import Player
 
 class HumanPlayer(Player):
-    def __init__(self, name, seat, total, cards = [], hand_total = 0, bet=0):
+    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0):
+        if cards is None:
+            cards = []
+
         super().__init__(name, cards, seat, hand_total)
         self.total = total
         self.bet = bet
