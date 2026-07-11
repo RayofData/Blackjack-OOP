@@ -53,7 +53,7 @@ while True:
     if num_players < 0:
         print(colored_text("Number of players cannot be negative.", RED))
     elif num_players > available_seats:
-        print(f"Only {available_seats} seats are available.")
+        print(colored_text(f"Only {available_seats} seats are available.", YELLOW))
     else:
         break
 
@@ -127,6 +127,7 @@ while table.current_table_size() > 1:
 
     ##### Blackjack #####
     for i in range(1, table.current_table_size()):
+        current_player = table.persons[j]
         if current_player.get_hand_total == 21:
             print(colored_text(f"{current_player.name} has Blackjack!!", GREEN))  
 
@@ -162,7 +163,23 @@ while table.current_table_size() > 1:
     print(colored_text(dealer, BLUE))
     dealer_seat.action(play_deck)
 
+### Winners ###
+    for i in range(1, table.current_table_size()):
+        current_player = table.persons[i]
+        print(current_player)
+        if current_player.get_hand_total() > 21:
+            print(colored_text(f"{current_player.name} BUSTED with {current_player.get_hand_total()} and loses ${current_player.bet}.", RED))
+        elif current_player.get_hand_total() < dealer_seat.get_hand_total() and dealer_seat.get_hand_total() <= 21:
+            print(colored_text(f"{current_player.name} LOST {current_player.get_hand_total()} compared to {dealer_seat.get_hand_total()} and loses ${current_player.bet}.", RED))
+        elif current_player.get_hand_total() == dealer_seat.get_hand_total():
+            print(colored_text(f"{current_player.name} PUSHED {current_player.get_hand_total()} compared to {dealer_seat.get_hand_total()} and wins back ${current_player.bet}.", YELLOW))
+            current_player.total += current_player.bet
+        else:
+            print(colored_text(f"{current_player.name} WINS {current_player.get_hand_total()} compared to {dealer_seat.get_hand_total()} and wins a total of ${current_player.bet*2}.", GREEN))
+            current_player.total += current_player.bet*2
+
     for i in range(table.current_table_size()):
         current_player = table.persons[i]
         current_player.cards = []
         current_player.bet = 0
+        current_player.set_hand_total()
