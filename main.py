@@ -92,12 +92,9 @@ while table.current_table_size() > 1:
     play_deck = deck.copy()
     random.shuffle(play_deck)
 
-    # Human Bet
+    # Bets
     for person in table.persons[1:]:
-        person.ask_bet()
-    
-
-        
+        person.ask_bet()        
 
     # Deal cards
     for i in range(2):
@@ -138,3 +135,12 @@ while table.current_table_size() > 1:
         print(dealer_seat)
         print(current_player)
         current_player.action(play_deck)
+
+    dealer.cards[0].state = "show"
+    print(dealer)
+    dealer_seat.action(play_deck)
+
+    for i in range(table.current_table_size()):
+        current_player = table.persons[i]
+        current_player.cards = []
+        current_player.bet = 0
