@@ -18,17 +18,29 @@ class NPCPlayer(Player):
         self.bet = random.randint(1,3)*5
         self.total -= self.bet
     
+    def split(self, deck):
+            if random.random() > 0.5:
+                pass
+            # split into two hands and double bet
+            
+    
     def double_down(self, deck):
         self.bet *= 2
-        self.receive_card(deck.pop())
+        self.hit(deck)
 
     def action(self, deck):
-        hand_total = self.get_hand_total()
-        if hand_total < 9:
-            self.hit(deck)
-        elif hand_total < 12:
+        action = input(f"Hand total: {self.get_hand_total()}\nHit, Stand, or Double Down? ")
+
+        if action.strip().lower().startswith(("d", "3")):
             self.double_down(deck)
-        elif hand_total < 16:
+            return
+
+        while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
-        else:
-            self.stay() 
+    
+            if self.get_hand_total() >= 21:
+                return
+            action = input("Hit or Stand? ")
+            
+        self.stay()
+     
