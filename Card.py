@@ -23,6 +23,10 @@ class Card:
         else:
             return "Hidden"
 
+    def ace_check(self):
+        return self.__rank == "Ace" and self.state.lower() == "hidden"
 
+    def ten_check(self):
+        return self.__value == 10 and self.state.lower() == "hidden"
 
     
