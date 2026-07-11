@@ -1,15 +1,23 @@
 class Card:
     def __init__(self, rank, suit, value, state):
-        self.rank = rank
-        self.suit = suit
-        self.value = value
+        self.__rank = rank
+        self.__suit = suit
+        self.__value = value
         self.state = state
 
     def __str__(self):
         if self.state.lower() == "hidden".lower():
             return "Hidden"
         else:
-            return f"{self.rank} of {self.suit}"
+            return f"{self.__rank} of {self.__suit}"
+
+    def get_value(self):
+        if self.state.lower() == "show".lower():
+            return self.__value
+        else:
+            return 0
+
+
 
 
     
