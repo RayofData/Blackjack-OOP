@@ -11,11 +11,11 @@ class HumanPlayer(Player):
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
-        return f"Player: {self.name}, Cards: {cards_text}, Hand total: {self.get_hand_total()} Pot: ${self.total}"
+        return f"Player: {self.name}\tPot: ${self.total}\nCards: {cards_text}\tHand total: {self.get_hand_total()}"
 
     def place_bet(self):
         while self.bet == 0:
-            bet = int(input("Minimal bet 5: "))
+            bet = int(input(f"Minimal bet 5\n{self.name} Enter a bet: "))
             if bet < 5:
                 print("Must be an amount of 5 or more.")
             elif bet > self.total:
@@ -55,6 +55,4 @@ class HumanPlayer(Player):
             if self.get_hand_total() >= 21:
                 return
             action = input("Hit or Stand? ")
-
-        self.stay()
     

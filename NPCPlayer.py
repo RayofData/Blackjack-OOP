@@ -12,7 +12,7 @@ class NPCPlayer(Player):
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
-        return f"NPC: {self.name}, Cards: {cards_text}, Hand total: {self.get_hand_total()} Pot: ${self.total}"
+        return f"NPC: {self.name}\tPot: ${self.total}\nCards: {cards_text}\tHand total: {self.get_hand_total()}"
 
     def place_bet(self):
         self.bet = random.randint(1,3)*5
@@ -28,19 +28,13 @@ class NPCPlayer(Player):
         self.bet *= 2
         self.hit(deck)
 
-    def action(self, deck):
-        action = input(f"Hand total: {self.get_hand_total()}\nHit, Stand, or Double Down? ")
 
-        if action.strip().lower().startswith(("d", "3")):
+    def action(self, deck):
+        if self.get_hand_total() in range(9, 12):
             self.double_down(deck)
             return
 
-        while action.strip().lower().startswith(("h", "1")):
+        while self.get_hand_total() <= 15:
             self.hit(deck)
-    
-            if self.get_hand_total() >= 21:
-                return
-            action = input("Hit or Stand? ")
             
-        self.stay()
      
