@@ -1,7 +1,7 @@
 from Player import Player
 
 class HumanPlayer(Player):
-    def __init__(self, name, cards, seat, total, hand_total=0, bet=0):
+    def __init__(self, name, seat, cards=[], total=0, hand_total=0, bet=0):
         super().__init__(name, cards, hand_total, seat)
         self.total = total
         self.bet = bet
@@ -33,17 +33,14 @@ class HumanPlayer(Player):
         self.bet *= 2
         self.hit(deck)
 
-    def stay(self):
-        pass
-
     def action(self, deck):
         action = input(f"Hand total: {self.get_hand_total()}\nHit, Stand, or Double Down? ")
 
-        if action.lower().startswith("d") or action == "3":
+        if action.strip().lower().startswith(("d", "3")):
             self.double_down(deck)
             return
 
-        while action.lower().startswith("h") or action == "1":
+        while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
     
             if self.get_hand_total() >= 21:
