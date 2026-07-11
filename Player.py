@@ -29,8 +29,8 @@ class Player:
 
     def receive_card(self, new_card):
         self.cards.append(new_card)   
-        self.set_hand_total()  
- 
+        self.set_hand_total() 
+    
     def hit(self, deck):
         print("Hit!")
         card = deck.pop()
