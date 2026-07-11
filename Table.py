@@ -4,7 +4,6 @@ class Table:
 
     def take_seat(self, person):
         self.persons.append(person)
-        return len(self.persons)+1
 
     def leave_table(self, seat):
         self.persons.remove(seat)
@@ -12,3 +11,7 @@ class Table:
     def print_table(self):
         for i in range(len(self.persons)):
             print(f"Seat {i+1}: {self.persons[i]}")
+
+    def table_size(self):
+        return len(self.persons)
+    

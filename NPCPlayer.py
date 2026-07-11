@@ -2,14 +2,14 @@ from Player import Player
 import random
 
 class NPCPlayer(Player):
-    def __init__(self, name, cards, seat, total, bet=0):
-        super().__init__(name, cards, seat)
+    def __init__(self, name, seat, total, cards=[], hand_total=0, bet=0):
+        super().__init__(name, cards, seat, hand_total)
         self.total = total
         self.bet = bet
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
-        return f"NPC: {self.name}, Cards: {cards_text}, Pot: {self.total}"
+        return f"NPC: {self.name}, Cards: {cards_text}, Hand total: {self.get_hand_total()} Pot: ${self.total}"
 
     def place_bet(self):
         self.bet = random.randint(1,3)*5

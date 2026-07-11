@@ -1,14 +1,14 @@
 from Player import Player
 
 class HumanPlayer(Player):
-    def __init__(self, name, seat, cards=[], total=0, hand_total=0, bet=0):
-        super().__init__(name, cards, hand_total, seat)
+    def __init__(self, name, seat, total, cards = [], hand_total = 0, bet=0):
+        super().__init__(name, cards, seat, hand_total)
         self.total = total
         self.bet = bet
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
-        return f"Player: {self.name}, Cards: {cards_text}, Hand total: {self.get_hand_total()} Pot: {self.total}"
+        return f"Player: {self.name}, Cards: {cards_text}, Hand total: {self.get_hand_total()} Pot: ${self.total}"
 
     def place_bet(self):
         while self.bet == 0:
