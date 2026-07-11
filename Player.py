@@ -30,7 +30,10 @@ class Player:
     def receive_card(self, new_card):
         self.cards.append(new_card)   
         self.set_hand_total() 
-    
+
+    def action(self):
+        pass
+        
     def hit(self, deck):
         print("Hit!")
         card = deck.pop()
@@ -43,8 +46,6 @@ class Player:
             print(f"{self.name} has 21!!")
         elif self.get_hand_total() > 21:
                 print(f"{self.name} has BUSTED!!")
-        else:
-            self.stay()
 
     def stay(self):
         print("Stand.")
