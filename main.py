@@ -3,6 +3,7 @@ from Table import Table
 from Dealer import Dealer
 from HumanPlayer import HumanPlayer
 from NPCPlayer import NPCPlayer
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
 import random
 
 ##### Create Deck #####
@@ -22,10 +23,13 @@ random.shuffle(dealers)
 
 dealer = Dealer(dealers[0]) # seat 1
 table = Table([dealer])
+available_seats = table.table_size - table.current_table_size()
+
+
 
 ##### Welcome Message ######
-print("Welcome to Ray's Blackjack!")
-print(f"This table has {table.table_size - table.current_table_size()} available seats.")
+print(colored_text("Welcome to Ray's Blackjack!", YELLOW))
+print(f"This table has {available_seats} available seats.")
 
 print("The game ends when you leave the table or run out of money.")
 print("Each player begins with the same starting balance.")
@@ -37,14 +41,27 @@ starting_balance = int(
 
 ##### Players creation #####
 # Human players
-num_players = int(input("How many human players are joining? "))
+
+
+while True:
+    try:
+        num_players = int(input("How many human players are joining? "))
+    except ValueError:
+        print(colored_text("Number of players must be an integer.", RED))
+        continue
+
+    if num_players < 0:
+        print(colored_text("Number of players cannot be negative.", RED))
+    elif num_players > available_seats:
+        print(f"Only {available_seats} seats are available.")
+    else:
+        break
+
 for i in range(num_players):
     name = input("Enter name: ")
     seat = table.current_table_size() + 1
     player = HumanPlayer(name, seat, starting_balance)
     table.take_seat(player)
-    if len(table.persons) == table.table_size:
-        break
 
 # NPC players
 max_npcs = table.table_size - table.current_table_size()
@@ -108,6 +125,11 @@ while table.current_table_size() > 1:
                 card.state = "show"
                 current_player.receive_card(card)
 
+    ##### Blackjack #####
+    for i in range(1, table.current_table_size()):
+        if current_player.get_hand_total == 21:
+            print(colored_text(f"{current_player.name} has Blackjack!!", GREEN))  
+
     # Everyone at table
     table.print_table()
     dealer_seat = table.persons[0]
@@ -132,12 +154,12 @@ while table.current_table_size() > 1:
     ##### Actions for hit, stay, double down and split #####
     for i in range(1, table.current_table_size()):
         current_player = table.persons[i]
-        print(dealer_seat)
+        print(colored_text(dealer_seat, BLUE))
         print(current_player)
         current_player.action(play_deck)
 
     dealer.cards[0].state = "show"
-    print(dealer)
+    print(colored_text(dealer, BLUE))
     dealer_seat.action(play_deck)
 
     for i in range(table.current_table_size()):

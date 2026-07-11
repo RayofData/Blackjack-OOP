@@ -1,3 +1,5 @@
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
+
 class Player:
     def __init__(self, name, cards, seat, hand_total=0):
         self.name = name
@@ -22,7 +24,7 @@ class Player:
         self.__hand_total = total
     
     def print_hand_total(self):
-        print(f"Hand total: {self.__hand_total}")
+        print(colored_text(f"Hand total: {self.__hand_total}", YELLOW))
 
     def print_hand(self):
         print(", ".join(str(card) for card in self.cards))
@@ -33,9 +35,9 @@ class Player:
 
     def action(self):
         pass
-        
+
     def hit(self, deck):
-        print("Hit!")
+        print(colored_text("Hit!", YELLOW))
         card = deck.pop()
         card.state = "show"
         self.receive_card(card)
@@ -43,9 +45,9 @@ class Player:
         self.print_hand_total()
 
         if self.get_hand_total() == 21:
-            print(f"{self.name} has 21!!")
+            print(colored_text(f"{self.name} has 21!!", GREEN))
         elif self.get_hand_total() > 21:
-                print(f"{self.name} has BUSTED!!")
+                print(colored_text(f"{self.name} has BUSTED!!", RED))
 
     def stay(self):
         print("Stand.")

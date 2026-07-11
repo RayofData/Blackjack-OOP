@@ -28,8 +28,8 @@ class HumanPlayer(BettingPlayer):
             if split.strip().lower().startswith("y"):
                 self.split(deck)
 
+        self.print_hand_total()
         action = input(
-            f"Hand total: {self.get_hand_total()}\n"
             "1. Hit\n2. Stand\n3. Double Down\nChoose an action: "
 )
 
