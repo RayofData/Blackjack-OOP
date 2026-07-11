@@ -12,7 +12,14 @@ class Player:
         return self.__hand_total
 
     def set_hand_total(self): 
-        self.__hand_total = sum(card.get_value() for card in self.cards) 
+        total = sum(card.get_value() for card in self.cards) 
+        ace_count = sum(card.get_value() == 11 for card in self.cards)
+        
+        if total > 21 and ace_count > 0:
+            ace_count -= 1
+            total -= 10
+
+        self.__hand_total = total
     
     def print_hand_total(self):
         print(f"Hand total: {self.__hand_total}")
@@ -34,7 +41,7 @@ class Player:
         if self.get_hand_total() == 21:
             print("21!!")
         elif self.get_hand_total() > 21:
-            print(f"BUSTED!!")
+                print(f"BUSTED!!")
 
     def stay(self):
         pass
