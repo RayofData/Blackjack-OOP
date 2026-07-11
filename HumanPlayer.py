@@ -1,14 +1,14 @@
 from Player import Player
 
 class HumanPlayer(Player):
-    def __init__(self, name, cards, seat, total, bet=0):
-        super().__init__(name, cards, seat)
+    def __init__(self, name, cards, seat, total, hand_total=0, bet=0):
+        super().__init__(name, cards, hand_total, seat)
         self.total = total
         self.bet = bet
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
-        return f"Player: {self.name}, Cards: {cards_text}, Pot: {self.total}"
+        return f"Player: {self.name}, Cards: {cards_text}, Hand total: {self.get_hand_total()} Pot: {self.total}"
 
     def place_bet(self):
         while self.bet == 0:
@@ -37,23 +37,17 @@ class HumanPlayer(Player):
         pass
 
     def action(self, deck):
-        action = input("Hit, Stand, or Double Down? ")
+        action = input(f"Hand total: {self.get_hand_total()}\nHit, Stand, or Double Down? ")
 
-        if action.lower().startswith("d"):
+        if action.lower().startswith("d") or action == "3":
             self.double_down(deck)
-            print(", ".join(str(card) for card in self.cards))
             return
 
-        while action.lower().startswith("h"):
+        while action.lower().startswith("h") or action == "1":
             self.hit(deck)
-            print(", ".join(str(card) for card in self.cards))
-
-            hand_total = sum(card.value for card in self.cards)
-
-            if hand_total >= 21:
+    
+            if self.get_hand_total() >= 21:
                 return
-
             action = input("Hit or Stand? ")
-
         self.stay()
     
