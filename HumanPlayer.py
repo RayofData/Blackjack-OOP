@@ -43,4 +43,5 @@ class HumanPlayer(BettingPlayer):
             if self.get_hand_total() >= 21:
                 return
             action = input("1. Hit\n2. Stand\nChoose an action:  ")
+        self.stay()
     

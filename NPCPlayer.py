@@ -15,11 +15,6 @@ class NPCPlayer(BettingPlayer):
         bet = random.randint(1,3)*5
         self.place_bet(bet)
     
-            
-    
-
-
-
     def action(self, deck):
         if self.get_hand_total() in range(9, 12):
             self.double_down(deck)
@@ -27,5 +22,6 @@ class NPCPlayer(BettingPlayer):
 
         while self.get_hand_total() <= 15:
             self.hit(deck)
+        self.stay()
             
      

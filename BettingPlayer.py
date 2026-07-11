@@ -8,7 +8,7 @@ class BettingPlayer(Player):
         super().__init__(name, cards, seat, hand_total)
         self.total = total
         self.bet = bet 
-           
+
     def ask_bet(self):
         pass
 
@@ -23,3 +23,4 @@ class BettingPlayer(Player):
     def double_down(self, deck):
         self.bet *= 2
         self.hit(deck) 
+
