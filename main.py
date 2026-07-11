@@ -5,7 +5,7 @@ from HumanPlayer import HumanPlayer
 from NPCPlayer import NPCPlayer
 import random
 
-##### Creates Deck #####
+##### Create Deck #####
 ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
 suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
 values = [2,3,4,5,6,7,8,9,10,10,10,10,11]
@@ -30,7 +30,7 @@ print("This table has five available seats.")
 print("The game ends when you leave the table or run out of money.")
 print("Each player begins with the same starting balance.")
 
-#### Starting Pot for everyone
+##### Starting Pot for everyone #####
 starting_balance = int(
     input("Enter the starting balance for each player: $")
 )
@@ -97,7 +97,7 @@ for person in table.persons[1:]:
 
 # Deal cards
 for i in range(2):
-    for j in range(table.table_size()):
+    for j in range(table.current_table_size()):
         current_player = table.persons[j]
         card = play_deck.pop()
 
@@ -111,14 +111,29 @@ for i in range(2):
 table.print_table()
 dealer_seat = table.persons[0]
 
-ace_show = dealer_seat.get_hand_total() == 11
+# Check for Dealer Blackjack
+hidden_card = dealer_seat.cards[0]
+visible_card = dealer_seat.cards[1]
 
-if ace_show:
+# Insurance for dealer blackjack
+if visible_card.get_rank == "Ace":
     pass # insurance bet
+
+if (hidden_card.ace_check() and visible_card.get_value() == 10) or (hidden_card.ten_check and visible_card.get_value() == 11):
+    print("Dealer Blackjack! No one wins.")
+    for i in range(1, table.current_table_size()):
+        current_player = table.persons[i]
+        if current_player.get_hand_total == 21:
+            current_player.total += current_player.bet
+        current_player.bet = 0   
+
+
+
+
 
 
 # Actions for hit, stay, double down and split
-for i in range(1, table.table_size()):
+for i in range(1, table.current_table_size()):
     current_player = table.persons[i]
     print(dealer_seat)
     print(current_player)
