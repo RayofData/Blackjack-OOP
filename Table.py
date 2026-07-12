@@ -14,7 +14,7 @@ class Table:
     def leave_table(self, seat):
         person = self.persons[seat - 1]
         if person.total < 5:
-            print(colored_text(f"{person.name} LOST.", RED))
+            print(colored_text(f"{person.name} LOST and leaves the table with {person.total}.", RED))
         else:
             print(colored_text(f"{person.name} leaves with ${person.total}.", YELLOW))
         self.persons.pop(seat - 1)
