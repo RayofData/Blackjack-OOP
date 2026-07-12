@@ -2,8 +2,8 @@ from styling import colored_text, RED, GREEN, YELLOW, BLUE
 from BettingPlayer import BettingPlayer
 
 class HumanPlayer(BettingPlayer):
-    def __init__(self, name, seat, hands, total, bet=0, insurance_bet=0 ):
-        super().__init__(name, seat, hands, total, bet, insurance_bet)
+    def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
+        super().__init__(name, hands, seat, total, bet, insurance_bet)
 
     def __str__(self):
         print(f"Player: {self.name}\tPot: ${self.total}")
@@ -37,7 +37,7 @@ class HumanPlayer(BettingPlayer):
             if split.strip().lower().startswith("y"):
                 self.split(deck)
 
-        self.print_hand_total()
+        self.get_hand_total_text()
 
         action = input(
             "1. Hit\n"

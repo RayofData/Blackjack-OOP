@@ -2,8 +2,8 @@ from BettingPlayer import BettingPlayer
 import random
 
 class NPCPlayer(BettingPlayer):
-    def __init__(self, name, seat, hands, total, bet=0, insurance_bet=0 ):
-        super().__init__(name, seat, hands, total, bet, insurance_bet)
+    def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
+        super().__init__(name, hands, seat, total, bet, insurance_bet)
 
     def __str__(self):
         print(f"NPC: {self.name}\tPot: ${self.total}")

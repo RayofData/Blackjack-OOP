@@ -2,7 +2,7 @@ from Player import Player
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class BettingPlayer(Player):
-    def __init__(self, name, seat, total, hands, bet=0, insurance_bet=0):
+    def __init__(self, name, hands, seat, total,  bet=0, insurance_bet=0):
         self.total = total
         self.bet = bet
         self.insurance_bet = insurance_bet
