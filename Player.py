@@ -7,9 +7,6 @@ class Player:
         self.seat = seat
         self.__hand_total = hand_total
 
-    def get_name(self):
-        return self.name
-
     def get_hand_total(self):
         return self.__hand_total
 
