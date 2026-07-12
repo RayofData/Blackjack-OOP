@@ -33,7 +33,7 @@ class Player:
         self.cards.append(new_card)   
         self.set_hand_total() 
 
-    def action(self):
+    def action(self, deck):
         pass
 
     def hit(self, deck):
@@ -51,6 +51,17 @@ class Player:
 
     def stay(self):
         print("Stand.")
+
+    def check_blackjack(self):
+        if len(self.cards) == 2 and self.get_hand_total() == 21:
+            print(
+                colored_text(
+                    f"{self.name} has Blackjack!!",
+                    GREEN
+                )
+            ) 
+    def check_blackjack_boolean(self):
+        return len(self.cards) == 2 and self.get_hand_total() == 21
 
 
     
