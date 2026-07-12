@@ -13,6 +13,8 @@ class NPCPlayer(BettingPlayer):
 
     def ask_bet(self):
         bet = random.randint(1,3)*5
+        if bet > self.total >= 5:
+            bet = self.total                   
         self.place_bet(bet)
     
     def action(self, deck):
