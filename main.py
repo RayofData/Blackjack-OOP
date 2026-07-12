@@ -97,6 +97,7 @@ while table.current_table_size() > 1:
 
     # Everyone at table
     table.print_table()
+    table.print_table_hands()
     dealer_seat = table.persons[0]
     dealer_hand = dealer_seat.hands[0]
 
@@ -131,7 +132,7 @@ while table.current_table_size() > 1:
         dealer_hand.set_total()
 
         print(colored_text("Dealer has Blackjack!", RED))
-        print(colored_text(str(dealer_seat), BLUE))
+        dealer_seat.print_hand()
 
         for current_player in table.persons[1:]:
             for i in range(current_player.total_hands()):
@@ -156,13 +157,13 @@ while table.current_table_size() > 1:
 
                 print(colored_text(
                     f"{current_player.name} also has Blackjack. "
-                    f"The main bet of ${current_player.bet} is returned.",
+                    f"The main bet of ${current_player.bet:.2f} is returned.",
                     YELLOW
                 ))
             else:
                 print(colored_text(
                     f"{current_player.name} loses the main bet "
-                    f"of ${current_player.bet} to dealer Blackjack.",
+                    f"of ${current_player.bet:.2f} to dealer Blackjack.",
                     RED
                 ))
 
@@ -183,11 +184,13 @@ while table.current_table_size() > 1:
 
         ##### Dealer's Turn #####
         dealer_hand.cards[0].state = "show"
-        dealer_hand.get_hand_text()
+
+        dealer_hand.set_total()
+        dealer_seat.print_seat_name()
+        dealer_seat.print_hand()
+
         dealer_seat.action(play_deck)
-        updated_hand = dealer_seat.hands[0]
-        updated_hand.set_total()
-        dealer_total = updated_hand.get_total()
+        dealer_total = dealer_hand.get_total()
 
 
         ##### Winnings #####
@@ -197,10 +200,11 @@ while table.current_table_size() > 1:
                 current_hand = current_player.hands[i]
                 current_hand.get_hand_text()
                 player_total = current_hand.get_hand_total()
-                bet = (current_player.bet + current_player.insurance_bet)/current_player.total_hands()
+                bet = current_player.bet/current_player.total_hands()
+                insurance_lose = current_player.insurance_bet
 
                 if current_player.check_blackjack_boolean():
-                    payout = bet * 2.5
+                    payout = bet * 2.5 - insurance_lose
                     current_player.total += payout
 
                     print(colored_text(
@@ -212,38 +216,38 @@ while table.current_table_size() > 1:
                 elif player_total > 21:
                     print(colored_text(
                         f"{current_player.name} BUSTED with {player_total} "
-                        f"and loses ${bet}.",
+                        f"and loses ${bet:.2f}.",
                         RED
                     ))
 
                 elif dealer_total > 21:
-                    payout = bet * 2
+                    payout = bet * 2 - insurance_lose
                     current_player.total += payout
 
                     print(colored_text(
                         f"{current_player.name} WINS with {player_total} "
-                        f"because the dealer busted. Payout: ${payout}.",
+                        f"because the dealer busted. Payout: ${payout:.2f}.",
                         GREEN
                     ))
 
                 elif player_total < dealer_total:
                     print(colored_text(
                         f"{current_player.name} LOST with {player_total} "
-                        f"against the dealer's {dealer_total} and loses ${bet}.",
+                        f"against the dealer's {dealer_total} and loses ${bet:.2f}.",
                         RED
                     ))
 
                 elif player_total == dealer_total:
-                    current_player.total += bet
+                    current_player.total += (bet - insurance_lose)
 
                     print(colored_text(
                         f"{current_player.name} PUSHED with {player_total} "
-                        f"and receives the ${bet} bet back.",
+                        f"and receives the ${bet:.2f} bet back.",
                         YELLOW
                     ))
 
                 else:
-                    payout = bet * 2
+                    payout = bet * 2 - insurance_lose
                     current_player.total += payout
 
                     print(colored_text(
