@@ -92,7 +92,7 @@ random.shuffle(npc_names)
 
 i = 0
 while table.current_table_size() < table.table_size and i < num_npcs:
-    seat = table.table_size + 1
+    seat = table.current_table_size() + 1
     name = npc_names[i]
     player = NPCPlayer(name, seat, starting_balance)
     table.take_seat(player)
@@ -126,10 +126,14 @@ while table.current_table_size() > 1:
                 current_player.receive_card(card)
 
     ##### Blackjack #####
-    for i in range(1, table.current_table_size()):
-        current_player = table.persons[j]
-        if current_player.get_hand_total == 21:
-            print(colored_text(f"{current_player.name} has Blackjack!!", GREEN))  
+    for current_player in table.persons[1:]:
+        if current_player.get_hand_total() == 21:
+            print(
+                colored_text(
+                    f"{current_player.name} has Blackjack!!",
+                    GREEN
+                )
+            ) 
 
     # Everyone at table
     table.print_table()
@@ -140,46 +144,107 @@ while table.current_table_size() > 1:
     visible_card = dealer_seat.cards[1]
 
     # Insurance for dealer blackjack
-    if visible_card.get_rank == "Ace":
+    if visible_card.get_rank() == "Ace":
         pass # insurance bet to be set up
     
     # Check for dealer blackjack
-    if (hidden_card.ace_check() and visible_card.get_value() == 10) or (hidden_card.ten_check and visible_card.get_value() == 11):
-        print("Dealer Blackjack! No one wins.")
-        for i in range(1, table.current_table_size()):
-            current_player = table.persons[i]
-            if current_player.get_hand_total == 21:
+    dealer_blackjack = (
+        hidden_card.ace_check() and visible_card.get_value() == 10
+    ) or (
+        hidden_card.ten_check() and visible_card.get_value() == 11
+    )
+    if dealer_blackjack:
+        hidden_card.state = "show"
+        dealer_seat.set_hand_total()
+
+        print(colored_text("Dealer has Blackjack!", RED))
+        print(colored_text(str(dealer_seat), BLUE))
+
+        for current_player in table.persons[1:]:
+            if current_player.get_hand_total() == 21:
                 current_player.total += current_player.bet
-            current_player.bet = 0   
 
-    ##### Actions for hit, stay, double down and split #####
-    for i in range(1, table.current_table_size()):
-        current_player = table.persons[i]
-        print(colored_text(dealer_seat, BLUE))
-        print(current_player)
-        current_player.action(play_deck)
+            current_player.bet = 0
 
-    dealer.cards[0].state = "show"
-    print(colored_text(dealer, BLUE))
-    dealer_seat.action(play_deck)
+    if not dealer_blackjack:         
+        ##### Actions for hit, stay, double down and split #####
+        for current_player in table.persons[1:]:
+            print(colored_text(str(dealer_seat), BLUE))
+            print(current_player)
 
-### Winners ###
-    for i in range(1, table.current_table_size()):
-        current_player = table.persons[i]
-        print(current_player)
-        if current_player.get_hand_total() > 21:
-            print(colored_text(f"{current_player.name} BUSTED with {current_player.get_hand_total()} and loses ${current_player.bet}.", RED))
-        elif current_player.get_hand_total() < dealer_seat.get_hand_total() and dealer_seat.get_hand_total() <= 21:
-            print(colored_text(f"{current_player.name} LOST {current_player.get_hand_total()} compared to {dealer_seat.get_hand_total()} and loses ${current_player.bet}.", RED))
-        elif current_player.get_hand_total() == dealer_seat.get_hand_total():
-            print(colored_text(f"{current_player.name} PUSHED {current_player.get_hand_total()} compared to {dealer_seat.get_hand_total()} and wins back ${current_player.bet}.", YELLOW))
-            current_player.total += current_player.bet
-        else:
-            print(colored_text(f"{current_player.name} WINS {current_player.get_hand_total()} compared to {dealer_seat.get_hand_total()} and wins a total of ${current_player.bet*2}.", GREEN))
-            current_player.total += current_player.bet*2
+            if current_player.get_hand_total() != 21:
+                current_player.action(play_deck)
 
-    for i in range(table.current_table_size()):
-        current_player = table.persons[i]
-        current_player.cards = []
+        ##### Dealer's Turn #####
+        dealer.cards[0].state = "show"
+        print(colored_text(dealer, BLUE))
+        dealer_seat.action(play_deck)
+
+        ##### Winnings #####
+        for current_player in table.persons[1:]:
+            print(current_player)
+
+            player_total = current_player.get_hand_total()
+            dealer_total = dealer_seat.get_hand_total()
+
+            if player_total > 21:
+                print(colored_text(
+                    f"{current_player.name} BUSTED with {player_total} "
+                    f"and loses ${current_player.bet}.",
+                    RED
+                ))
+
+            elif player_total < dealer_total <= 21:
+                print(colored_text(
+                    f"{current_player.name} LOST {player_total} compared "
+                    f"to {dealer_total} and loses ${current_player.bet}.",
+                    RED
+                ))
+
+            elif player_total == dealer_total:
+                print(colored_text(
+                    f"{current_player.name} PUSHED with {player_total} "
+                    f"and receives ${current_player.bet} back.",
+                    YELLOW
+                ))
+                current_player.total += current_player.bet
+
+            else:
+                winnings = current_player.bet * 2
+                print(colored_text(
+                    f"{current_player.name} WINS with {player_total} "
+                    f"and receives ${winnings}.",
+                    GREEN
+                ))
+                current_player.total += winnings
+
+    ##### Table Reset ######
+    for current_player in table.persons:
+        current_player.cards.clear()
         current_player.bet = 0
         current_player.set_hand_total()
+
+    ##### Exit Table #####
+    leave = input("Leave table? Y/N: ")
+
+    while leave.strip().lower().startswith("y"):
+        table.print_table()
+
+        try:
+            seat = int(input("Enter the seat to leave: "))
+        except ValueError:
+            print(colored_text("Seat must be an integer.", RED))
+            continue
+
+        if seat == 1:
+            print(colored_text("The dealer cannot leave the table.", RED))
+        elif not 1 <= seat <= table.current_table_size():
+            print(colored_text("That seat does not exist.", RED))
+        else:
+            table.leave_table(seat)
+
+            for i, current_player in enumerate(table.persons, start=1):
+                current_player.seat = i
+
+        leave = input("Should another player leave? Y/N: ")
+                
