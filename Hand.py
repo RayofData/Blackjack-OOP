@@ -1,10 +1,9 @@
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class Hand:
-    def __init__(self, cards=None):
+    def __init__(self, cards=None, hand_total = 0):
         self.cards = [] if cards is None else cards
-        self.__hand_total = 0
-        self.set_total()
+        self.__hand_total = hand_total
 
     def add_card(self, card):
         self.cards.append(card)
