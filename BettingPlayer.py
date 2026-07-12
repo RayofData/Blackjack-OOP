@@ -1,4 +1,5 @@
 from Player import Player
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class BettingPlayer(Player):
     def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0):
@@ -24,5 +25,10 @@ class BettingPlayer(Player):
         if self.total >= self.bet:
             self.total -= self.bet
             self.bet *= 2
+            print(colored_text(f"DOUBLE DOWN!! New bet ${self.bet}", YELLOW))
             self.hit(deck)
+            return True
+        else:
+            print(colored_text("You do not have enough money to double down.", RED))
+            return False
 
