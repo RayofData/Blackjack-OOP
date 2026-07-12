@@ -1,3 +1,5 @@
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
+
 class Card:
     def __init__(self, rank, suit, value, state):
         self.__rank = rank
@@ -8,6 +10,8 @@ class Card:
     def __str__(self):
         if self.state.lower() == "hidden".lower():
             return "Hidden"
+        elif self.get_value() == 10 or self.get_value() == 11:
+            return colored_text(f"{self.__rank} of {self.__suit}", GREEN)
         else:
             return f"{self.__rank} of {self.__suit}"
 

@@ -71,13 +71,12 @@ class HumanPlayer(BettingPlayer):
         self.stay()
 
     def ask_insurance(self):
-        insurance = input(
-                colored_text(
-                    f"{self.name} Insurance costs ${self.bet*0.5:.2f}. "
-                    "Enter Y or Yes to place the insurance bet, or press Enter to decline: ", 
-                    YELLOW
-                )
-            )
+        prompt = (
+            colored_text(f"{self.name} Insurance costs ${self.bet*0.5:.2f}. ", YELLOW)
+            + "Enter Y or Yes to place the insurance bet, or press Enter to decline: "
+        )
+        insurance = input(prompt)
+        
         if insurance.strip().lower().startswith("y"):
             self.set_insurance_bet()
         else:
