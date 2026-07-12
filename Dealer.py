@@ -1,7 +1,10 @@
 from Player import Player
 
 class Dealer(Player):
-    def __init__(self, name, cards = [], seat=1):
+    def __init__(self, name, cards=None, seat=1):
+        if cards is None:
+            cards = []
+
         super().__init__(name, cards, seat)
 
     def __str__(self):
