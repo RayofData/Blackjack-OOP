@@ -187,9 +187,12 @@ while table.current_table_size() > 1:
         current_player.set_hand_total()
 
     ##### Exit Table #####
-    for current_player in table.persons[1:]:
+    for current_player in reversed(table.persons[1:]):
         if current_player.total < 5:
             table.leave_table(current_player.seat)
+            
+    for seat, current_player in enumerate(table.persons, start=1):
+        current_player.seat = seat
 
     leave = input("Leave table? Y/N: ")
 
