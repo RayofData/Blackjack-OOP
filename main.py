@@ -170,9 +170,11 @@ while table.current_table_size() > 1:
     if not dealer_blackjack:         
         ##### Actions for hit, stay, double down and split #####
         for current_player in table.persons[1:]:
+            current_player.print_seat_name()
             for i in range(current_player.total_hands()):
                 current_hand = current_player.hands[i]
                 current_hand_total = current_hand.get_hand_total()
+                table.persons[0].print_seat_name()
                 table.persons[0].print_hand()
                 current_player.print_hand()
 
@@ -190,11 +192,12 @@ while table.current_table_size() > 1:
 
         ##### Winnings #####
         for current_player in table.persons[1:]:
-            current_player.print_hand()
+            
             for i in range(current_player.total_hands()):
                 current_hand = current_player.hands[i]
+                current_hand.get_hand_text()
                 player_total = current_hand.get_hand_total()
-                bet = current_player.bet + current_player.insurance_bet
+                bet = (current_player.bet + current_player.insurance_bet)/current_player.total_hands()
 
                 if current_player.check_blackjack_boolean():
                     payout = bet * 2.5
