@@ -2,10 +2,10 @@ from styling import colored_text, RED, GREEN, YELLOW, BLUE
 from BettingPlayer import BettingPlayer
 
 class HumanPlayer(BettingPlayer):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0):
+    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0 ):
         if cards is None:
             cards = []
-        super().__init__(name, seat, total, cards, hand_total, bet)
+        super().__init__(name, seat, total, cards, hand_total, bet, insurance_bet)
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
@@ -69,3 +69,16 @@ class HumanPlayer(BettingPlayer):
             )
 
         self.stay()
+
+    def ask_insurance(self):
+        insurance = input(
+                colored_text(
+                    f"{self.name} Insurance costs ${self.bet*0.5:.2f}. "
+                    "Enter Y or Yes to place the insurance bet, or press Enter to decline: ", 
+                    YELLOW
+                )
+            )
+        if insurance.strip().lower().startswith("y"):
+            self.set_insurance_bet()
+        else:
+            print("No insurance.")

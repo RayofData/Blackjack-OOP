@@ -2,10 +2,10 @@ from BettingPlayer import BettingPlayer
 import random
 
 class NPCPlayer(BettingPlayer):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0):
+    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0):
         if cards is None:
             cards = []
-        super().__init__(name, seat, total, cards, hand_total, bet)
+        super().__init__(name, seat, total, cards, hand_total, bet, insurance_bet)
 
     def __str__(self):
         cards_text = ", ".join(str(card) for card in self.cards)
@@ -25,5 +25,10 @@ class NPCPlayer(BettingPlayer):
         while self.get_hand_total() <= 15:
             self.hit(deck)
         self.stay()
+
+    def ask_insurance(self):
+        insurance = random.random()
+        if insurance > 0.5:
+            self.set_insurance_bet()
             
      
