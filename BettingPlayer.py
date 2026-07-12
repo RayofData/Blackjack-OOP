@@ -2,15 +2,12 @@ from Player import Player
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class BettingPlayer(Player):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0):
-        if cards is None:
-            cards = []
+    def __init__(self, name, seat, total, hands, bet=0, insurance_bet=0):
         self.total = total
         self.bet = bet
         self.insurance_bet = insurance_bet
 
-
-        super().__init__(name, cards, seat, hand_total)
+        super().__init__(name, hands, seat)
         self.total = total
         self.bet = bet 
 
