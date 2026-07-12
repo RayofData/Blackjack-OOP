@@ -71,6 +71,10 @@ while table.current_table_size() > 1:
 
     # Stars new game with new shuffled deck
     play_deck = deck.copy()
+
+    for card in play_deck:
+        card.state = "hidden"
+
     random.shuffle(play_deck)
 
     # Bets
@@ -89,13 +93,13 @@ while table.current_table_size() > 1:
                 card.state = "show"
                 current_player.receive_card(card)
 
-    ##### Blackjack #####
-    for current_player in table.persons[1:]:
-        current_player.check_blackjack()
-
     # Everyone at table
     table.print_table()
     dealer_seat = table.persons[0]
+
+    ##### Blackjack #####
+    for current_player in table.persons[1:]:
+        current_player.check_blackjack()
 
     ##### Check for Dealer Blackjack #####
     hidden_card = dealer_seat.cards[0]
@@ -103,7 +107,10 @@ while table.current_table_size() > 1:
 
     # Insurance for dealer blackjack
     if visible_card.get_rank() == "Ace":
-        pass # insurance bet to be set up
+        print(colored_text("Dealer is showing an Ace.", RED))
+        for current_player in table.persons[1:]:
+            current_player.ask_insurance()
+
     
     # Check for dealer blackjack
     dealer_blackjack = (
@@ -111,6 +118,11 @@ while table.current_table_size() > 1:
     ) or (
         hidden_card.ten_check() and visible_card.get_value() == 11
     )
+
+    if visible_card.get_rank() == "Ace" and not dealer_blackjack:
+        print("Dealer did not have blackjack.")
+
+    ##### Winners for dealer blackjack #####
     if dealer_blackjack:
         hidden_card.state = "show"
         dealer_seat.set_hand_total()
@@ -119,20 +131,37 @@ while table.current_table_size() > 1:
         print(colored_text(str(dealer_seat), BLUE))
 
         for current_player in table.persons[1:]:
-            if current_player.get_hand_total() == 21:
+            player_total = current_player.get_hand_total()
+
+            # Resolve insurance separately
+            if current_player.insurance_bet > 0:
+                insurance_payout = current_player.insurance_bet * 3
+                current_player.total += insurance_payout
+
                 print(colored_text(
-                    f"{current_player.name} PUSHED with {player_total} "
-                    f"and receives ${current_player.bet} back.",
+                    f"{current_player.name} wins the insurance bet. "
+                    f"Payout: ${insurance_payout:.2f}.",
+                    GREEN
+                ))
+                pass
+
+            # Resolve the main hand
+            if current_player.check_blackjack_boolean():
+                current_player.total += current_player.bet
+
+                print(colored_text(
+                    f"{current_player.name} also has Blackjack. "
+                    f"The main bet of ${current_player.bet} is returned.",
                     YELLOW
                 ))
-                current_player.total += current_player.bet
             else:
                 print(colored_text(
-                    f"{current_player.name} BUSTED with {player_total} "
-                    f"and loses ${current_player.bet}.",
+                    f"{current_player.name} loses the main bet "
+                    f"of ${current_player.bet} to dealer Blackjack.",
                     RED
                 ))
 
+    ##### Loop for rest of game play ######
     if not dealer_blackjack:         
         ##### Actions for hit, stay, double down and split #####
         for current_player in table.persons[1:]:
@@ -156,7 +185,7 @@ while table.current_table_size() > 1:
             print(current_player)
 
             player_total = current_player.get_hand_total()
-            bet = current_player.bet
+            bet = current_player.bet + current_player.insurance_bet
 
             if current_player.check_blackjack_boolean():
                 payout = bet * 2.5
@@ -214,16 +243,18 @@ while table.current_table_size() > 1:
     ##### Table Reset ######
     for current_player in table.persons:
         current_player.cards.clear()
-        current_player.bet = 0
         current_player.set_hand_total()
+
+    for current_player in table.persons[1:]:
+        current_player.bet = 0
+        current_player.insurance_bet = 0
 
     ##### Exit Table #####
     for current_player in table.persons[1:]:
         if current_player.total < 5:
             table.leave_table(current_player.seat, room)
-            
-    for seat, current_player in enumerate(table.persons, start=1):
-        current_player.seat = seat
+            for seat, current_player in enumerate(table.persons, start=1):
+                current_player.seat = seat
 
     if table.current_table_size() > 1:
         leave = input(
