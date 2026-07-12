@@ -17,7 +17,7 @@ class Player:
         total = sum(card.get_value() for card in self.cards) 
         ace_count = sum(card.get_value() == 11 for card in self.cards)
 
-        if total > 21 and ace_count > 0:
+        while total > 21 and ace_count > 0:
             ace_count -= 1
             total -= 10
 
@@ -52,6 +52,5 @@ class Player:
     def stay(self):
         print("Stand.")
 
-    
 
     
