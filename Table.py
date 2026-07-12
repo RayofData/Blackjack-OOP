@@ -16,10 +16,10 @@ class Table:
         i = seat - 1
         person = self.persons[i]
         if person.total < 5:
-            print(colored_text(f"{person.name} LOST and leaves the table with {person.total}.", RED))
+            print(colored_text(f"{person.name} LOST and leaves the table with ${person.total}.", RED))
         else:
             print(colored_text(f"{person.name} leaves with ${person.total}.", YELLOW))
-        self.persons.pop(seat - 1)
+        self.persons.pop(i)
         room.join(person)
 
 
