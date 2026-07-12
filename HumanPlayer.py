@@ -5,11 +5,11 @@ class HumanPlayer(BettingPlayer):
     def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
         super().__init__(name, hands, seat, total, bet, insurance_bet)
 
-    def __str__(self):
+    def print_hand(self):
         print(f"Player: {self.name}\tPot: ${self.total}")
         for i in range(self.total_hands()):
             current_hand = self.hands[i]
-            print(f"Cards: {current_hand.get_hand()}\t{current_hand.get_total()}")
+            print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
 
     def ask_bet(self):
         while self.bet == 0:
@@ -31,13 +31,18 @@ class HumanPlayer(BettingPlayer):
 
 
     def action(self, deck):
-        pair = len(self.cards) == 2 and self.cards[0].get_rank() == self.cards[1].get_rank()
+
+        starting_hand = self.hands[0]
+        card1 = starting_hand.cards[0].get_rank()
+        card2 = starting_hand.cards[1].get_rank()
+        pair = card1 == card2
+
         if pair:
             split = input(colored_text("Split? Y/N ", YELLOW))
             if split.strip().lower().startswith("y"):
                 self.split(deck)
 
-        self.get_hand_total_text()
+        starting_hand.get_hand_total_text()
 
         action = input(
             "1. Hit\n"
@@ -58,8 +63,8 @@ class HumanPlayer(BettingPlayer):
 
         while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
-
-            if self.get_hand_total() >= 21:
+            
+            if starting_hand.get_hand_total() >= 21:
                 break
 
             action = input(
