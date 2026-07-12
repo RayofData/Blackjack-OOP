@@ -43,6 +43,9 @@ class Player:
 
     def total_hands(self):
         return len(self.hands)
+    
+    def print_hand(self):
+        pass
 
 
     
