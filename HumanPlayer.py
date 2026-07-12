@@ -13,11 +13,19 @@ class HumanPlayer(BettingPlayer):
 
     def ask_bet(self):
         while self.bet == 0:
-            bet = int(input(f"Minimal bet 5\n{self.name} Enter a bet: "))
+            try:
+                bet = int(input(f"Minimal bet 5\n{self.name} Enter a bet: $"))
+            except ValueError:
+                print(colored_text("Bet must be an integer.", RED))
+                continue
+
             if bet < 5:
                 print(colored_text("Must be an amount of 5 or more.", RED))
             elif bet > self.total:
-                print(colored_text(f"Bet must be less than total pot of ${self.total}", RED))
+                print(colored_text(
+                    f"Bet must be less than total pot of ${self.total}",
+                    RED
+                ))
             else:
                 self.place_bet(bet)
 
