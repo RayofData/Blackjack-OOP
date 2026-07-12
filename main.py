@@ -47,7 +47,7 @@ while True:
 for i in range(num_players):
     name = input("Enter name: ")
     seat = table.current_table_size() + 1
-    player = HumanPlayer(name, seat, starting_balance)
+    player = HumanPlayer(name, [Hand()], seat, starting_balance)
     table.take_seat(player)
 
 # NPC players
@@ -59,7 +59,7 @@ i = 0
 while table.current_table_size() < table.table_size and i < num_npcs:
     seat = table.current_table_size() + 1
     name = npc_names[i]
-    player = NPCPlayer(name, seat, starting_balance)
+    player = NPCPlayer(name, [Hand()], seat, starting_balance)
     table.take_seat(player)
     i += 1
 
@@ -146,7 +146,7 @@ while table.current_table_size() > 1:
                 pass
 
             # Resolve the main hand
-            if current_player.check_blackjack_boolean():
+            if current_player.check_blackjack_boolean() and current_player.total_hands() == 1:
                 current_player.total += current_player.bet
 
                 print(colored_text(
