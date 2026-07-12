@@ -30,7 +30,7 @@ class Table:
             if i == 0:
                 print(colored_text(f"Seal {i+1}: Dealer {person.name}", YELLOW))
             else:
-                print(f"Seat {i+1}: {person.name}\t Pot: {person.total}")
+                print(f"Seat {i+1}: {person.name}\t Pot: ${person.total}")
 
     def current_table_size(self):
         return len(self.persons)
