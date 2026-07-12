@@ -1,4 +1,8 @@
 from Card import Card
 
 class Hand(Card):
-    pass
+    def __init__(self, cards):
+        self.cards = cards
+
+    def add_card(self, card):
+        self.cards.append(card)
