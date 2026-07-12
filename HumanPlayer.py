@@ -24,7 +24,7 @@ class HumanPlayer(BettingPlayer):
                 print(colored_text("Must be an amount of 5 or more.", RED))
             elif bet > self.total:
                 print(colored_text(
-                    f"Bet must be less than total pot of ${self.total}",
+                    f"Bet must be less than total pot of ${self.total:.2f}",
                     RED
                 ))
             else:

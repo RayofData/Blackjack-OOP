@@ -27,7 +27,7 @@ class BettingPlayer(Player):
         if self.total >= self.bet:
             self.total -= self.bet
             self.bet *= 2
-            print(colored_text(f"DOUBLE DOWN!! New bet ${self.bet}", YELLOW))
+            print(colored_text(f"DOUBLE DOWN!! New bet ${self.bet:.2f}", YELLOW))
             self.hit(deck)
             return True
         else:
