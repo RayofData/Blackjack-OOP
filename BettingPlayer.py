@@ -2,13 +2,18 @@ from Player import Player
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class BettingPlayer(Player):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0):
+    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0):
         if cards is None:
             cards = []
+        self.total = total
+        self.bet = bet
+        self.insurance_bet = insurance_bet
+
 
         super().__init__(name, cards, seat, hand_total)
         self.total = total
         self.bet = bet 
+
 
     def ask_bet(self):
         pass
@@ -32,3 +37,7 @@ class BettingPlayer(Player):
             print(colored_text("You do not have enough money to double down.", RED))
             return False
 
+    def set_insurance_bet(self):
+        self.insurance_bet = self.bet*0.5
+        self.total -= self.insurance_bet
+        print(f"{self.name} purchases insurance.")
