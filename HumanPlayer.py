@@ -5,16 +5,17 @@ class HumanPlayer(BettingPlayer):
     def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
         super().__init__(name, hands, seat, total, bet, insurance_bet)
 
+    def print_seat_name(self):
+         print(colored_text(f"Player: {self.name}", GREEN))
+
     def print_hand(self):
-        print(f"Player: {self.name}\tPot: ${self.total}")
-        for i in range(self.total_hands()):
-            current_hand = self.hands[i]
-            print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
+        current_hand = self.hands[0]
+        print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
 
     def ask_bet(self):
         while self.bet == 0:
             try:
-                bet = int(input(f"Minimal bet 5\n{self.name} Enter a bet: $"))
+                bet = float(input(f"Minimal bet 5\n{self.name} Enter a bet: $"))
             except ValueError:
                 print(colored_text("Bet must be an integer.", RED))
                 continue
@@ -53,20 +54,20 @@ class HumanPlayer(BettingPlayer):
 
         if action.strip().lower().startswith(("d", "3")):
             if self.double_down(deck):
-                pass
-            else: 
+                return
+            else:
                 action = input(
-                "1. Hit\n"
-                "2. Stand\n"
-                "Choose an action: "
-            )
+                    "1. Hit\n"
+                    "2. Stand\n"
+                    "Choose an action: "
+                )
 
         while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
 
             updated_hand = self.hands[0]
             if updated_hand.get_hand_total() >= 21:
-                break
+                return
 
             action = input(
                 "1. Hit\n"
