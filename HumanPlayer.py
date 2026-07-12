@@ -63,8 +63,9 @@ class HumanPlayer(BettingPlayer):
 
         while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
-            
-            if starting_hand.get_hand_total() >= 21:
+
+            updated_hand = self.hands[0]
+            if updated_hand.get_hand_total() >= 21:
                 break
 
             action = input(
