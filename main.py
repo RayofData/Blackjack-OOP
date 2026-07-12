@@ -86,25 +86,27 @@ while table.current_table_size() > 1:
     for i in range(2):
         for j in range(table.current_table_size()):
             current_player = table.persons[j]
+            current_hand = current_player.hands[0]
             card = play_deck.pop()
 
             if i == 0 and j == 0: 
-                current_player.receive_card(card) 
+                current_hand.add_card(card) 
             else:
                 card.state = "show"
-                current_player.receive_card(card)
+                current_hand.add_card(card)
 
     # Everyone at table
     table.print_table()
     dealer_seat = table.persons[0]
+    dealer_hand = dealer_seat.hands[0]
 
     ##### Blackjack #####
     for current_player in table.persons[1:]:
         current_player.check_blackjack()
 
     ##### Check for Dealer Blackjack #####
-    hidden_card = dealer_seat.cards[0]
-    visible_card = dealer_seat.cards[1]
+    hidden_card = dealer_hand.cards[0]
+    visible_card = dealer_hand.cards[1]
 
     # Insurance for dealer blackjack
     if visible_card.get_rank() == "Ace":
@@ -126,7 +128,7 @@ while table.current_table_size() > 1:
     ##### Winners for dealer blackjack #####
     if dealer_blackjack:
         hidden_card.state = "show"
-        dealer_seat.set_hand_total()
+        dealer_hand.set_hand_total()
 
         print(colored_text("Dealer has Blackjack!", RED))
         print(colored_text(str(dealer_seat), BLUE))
@@ -166,24 +168,27 @@ while table.current_table_size() > 1:
     if not dealer_blackjack:         
         ##### Actions for hit, stay, double down and split #####
         for current_player in table.persons[1:]:
-            print(colored_text(str(dealer_seat), BLUE))
-            print(current_player)
+            for i in range(current_player.total_hands()):
+                current_hand = current_player.hands[i]
+                current_hand_total = current_hand.get_hand_total()
+                print(colored_text(str(dealer_seat.name), BLUE))
+                current_player.print_hand()
 
-            if current_player.get_hand_total() != 21:
-                current_player.action(play_deck)
+                if current_hand_total != 21:
+                    current_player.action(play_deck)
 
         ##### Dealer's Turn #####
         dealer.cards[0].state = "show"
         print(colored_text(dealer, BLUE))
         print(colored_text(dealer.get_hand_total(), BLUE))
         dealer_seat.action(play_deck)
-        dealer_seat.set_hand_total()
+        dealer_hand.set_hand_total()
         dealer_total = dealer.get_hand_total()
 
 
         ##### Winnings #####
         for current_player in table.persons[1:]:
-            print(current_player)
+            current_player.print_hand()
 
             player_total = current_player.get_hand_total()
             bet = current_player.bet + current_player.insurance_bet
