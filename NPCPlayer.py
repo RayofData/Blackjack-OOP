@@ -5,11 +5,12 @@ class NPCPlayer(BettingPlayer):
     def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
         super().__init__(name, hands, seat, total, bet, insurance_bet)
 
+    def print_seat_name(self):
+         print(f"NPC: {self.name}")
+
     def print_hand(self):
-        print(f"NPC: {self.name}\tPot: ${self.total}")
-        for i in range(self.total_hands()):
-            current_hand = self.hands[i]
-            print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
+        current_hand = self.hands[0]
+        print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
 
     def ask_bet(self):
         bet = random.randint(1,3)*5
@@ -24,6 +25,8 @@ class NPCPlayer(BettingPlayer):
 
         while self.hands[0].get_hand_total() <= 15:
             self.hit(deck)
+        if self.hands[0].get_hand_total() > 21:
+            return
         self.stay()
 
     def ask_insurance(self):
