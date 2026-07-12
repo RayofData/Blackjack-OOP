@@ -1,6 +1,6 @@
 class Table:
-    def __init__(self, persons=[], table_size = 6):
-        self.persons = persons
+    def __init__(self, persons=None, table_size=6):
+        self.persons = [] if persons is None else persons
         self.table_size = table_size
 
     def take_seat(self, person):
@@ -10,7 +10,7 @@ class Table:
             print("Table is full.")
 
     def leave_table(self, seat):
-        self.persons.remove(seat)
+        self.persons.pop(seat-1)
 
     def print_table(self):
         for i in range(len(self.persons)):
