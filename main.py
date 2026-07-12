@@ -1,31 +1,18 @@
-from Card import Card
 from Table import Table
 from Dealer import Dealer
 from HumanPlayer import HumanPlayer
 from NPCPlayer import NPCPlayer
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
+from helper import deck, dealers, npc_names
 import random
 
-##### Create Deck #####
-ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"]
-suits = ["Hearts", "Diamonds", "Clubs", "Spades"]
-values = [2,3,4,5,6,7,8,9,10,10,10,10,11]
-deck = []
-
-for suit in suits:
-    for i in range(13):
-        deck.append(Card(ranks[i], suit, values[i], "hidden"))
-
-
 ##### Dealer #####
-dealers = ["Sarah", "Robin", "Kat", "Austin", "Becky"]
 random.shuffle(dealers)
-
 dealer = Dealer(dealers[0]) # seat 1
+
+##### Create Table #####
 table = Table([dealer])
 available_seats = table.table_size - table.current_table_size()
-
-
 
 ##### Welcome Message ######
 print(colored_text("Welcome to Ray's Blackjack!", YELLOW))
@@ -41,8 +28,6 @@ starting_balance = int(
 
 ##### Players creation #####
 # Human players
-
-
 while True:
     try:
         num_players = int(input("How many human players are joining? "))
@@ -66,28 +51,6 @@ for i in range(num_players):
 # NPC players
 max_npcs = table.table_size - table.current_table_size()
 num_npcs = int(input(f"How many NPC players are joining? Maximum: {max_npcs} "))
-npc_names = [
-    "Alex",
-    "Jordan",
-    "Taylor",
-    "Morgan",
-    "Casey",
-    "Riley",
-    "Cameron",
-    "Avery",
-    "Dylan",
-    "Jamie",
-    "Logan",
-    "Parker",
-    "Quinn",
-    "Reese",
-    "Blake",
-    "Hayden",
-    "Sydney",
-    "Emerson",
-    "Rowan",
-    "Charlie"
-]
 random.shuffle(npc_names)
 
 i = 0
@@ -97,7 +60,6 @@ while table.current_table_size() < table.table_size and i < num_npcs:
     player = NPCPlayer(name, seat, starting_balance)
     table.take_seat(player)
     i += 1
-
 
 ## Start game loop
 while table.current_table_size() > 1:
@@ -225,6 +187,10 @@ while table.current_table_size() > 1:
         current_player.set_hand_total()
 
     ##### Exit Table #####
+    for current_player in table.persons[1:]:
+        if current_player.total < 5:
+            table.leave_table(current_player.seat)
+
     leave = input("Leave table? Y/N: ")
 
     while leave.strip().lower().startswith("y"):
@@ -247,4 +213,3 @@ while table.current_table_size() > 1:
                 current_player.seat = i
 
         leave = input("Should another player leave? Y/N: ")
-                
