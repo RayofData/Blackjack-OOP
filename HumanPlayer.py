@@ -2,19 +2,20 @@ from styling import colored_text, RED, GREEN, YELLOW, BLUE
 from BettingPlayer import BettingPlayer
 
 class HumanPlayer(BettingPlayer):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0 ):
-        if cards is None:
-            cards = []
-        super().__init__(name, seat, total, cards, hand_total, bet, insurance_bet)
+    def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
+        super().__init__(name, hands, seat, total, bet, insurance_bet)
 
-    def __str__(self):
-        cards_text = ", ".join(str(card) for card in self.cards)
-        return f"Player: {self.name}\tPot: ${self.total}\nCards: {cards_text}\tHand total: {self.get_hand_total()}"
+    def print_seat_name(self):
+         print(colored_text(f"Player: {self.name}", GREEN))
+
+    def print_hand(self):
+        current_hand = self.hands[0]
+        print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
 
     def ask_bet(self):
         while self.bet == 0:
             try:
-                bet = int(input(f"Minimal bet 5\n{self.name} Enter a bet: $"))
+                bet = float(input(f"Minimal bet 5\n{self.name} Enter a bet: $"))
             except ValueError:
                 print(colored_text("Bet must be an integer.", RED))
                 continue
@@ -31,13 +32,18 @@ class HumanPlayer(BettingPlayer):
 
 
     def action(self, deck):
-        pair = len(self.cards) == 2 and self.cards[0].get_rank() == self.cards[1].get_rank()
+
+        starting_hand = self.hands[0]
+        card1 = starting_hand.cards[0].get_rank()
+        card2 = starting_hand.cards[1].get_rank()
+        pair = card1 == card2
+
         if pair:
             split = input(colored_text("Split? Y/N ", YELLOW))
             if split.strip().lower().startswith("y"):
                 self.split(deck)
 
-        self.print_hand_total()
+        starting_hand.get_hand_total_text()
 
         action = input(
             "1. Hit\n"
@@ -48,19 +54,20 @@ class HumanPlayer(BettingPlayer):
 
         if action.strip().lower().startswith(("d", "3")):
             if self.double_down(deck):
-                pass
-            else: 
+                return
+            else:
                 action = input(
-                "1. Hit\n"
-                "2. Stand\n"
-                "Choose an action: "
-            )
+                    "1. Hit\n"
+                    "2. Stand\n"
+                    "Choose an action: "
+                )
 
         while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
 
-            if self.get_hand_total() >= 21:
-                break
+            updated_hand = self.hands[0]
+            if updated_hand.get_hand_total() >= 21:
+                return
 
             action = input(
                 "1. Hit\n"
@@ -76,7 +83,7 @@ class HumanPlayer(BettingPlayer):
             + "Enter Y or Yes to place the insurance bet, or press Enter to decline: "
         )
         insurance = input(prompt)
-        
+
         if insurance.strip().lower().startswith("y"):
             self.set_insurance_bet()
         else:

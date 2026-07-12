@@ -1,64 +1,56 @@
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class Player:
-    def __init__(self, name, cards, seat, hand_total=0):
+    def __init__(self, name, hands, seat):
         self.name = name
-        self.cards = cards
+        self.hands = hands
         self.seat = seat
-        self.__hand_total = hand_total
-
-    def get_hand_total(self):
-        return self.__hand_total
-
-    def set_hand_total(self): 
-        total = sum(card.get_value() for card in self.cards) 
-        ace_count = sum(card.get_value() == 11 for card in self.cards)
-
-        while total > 21 and ace_count > 0:
-            ace_count -= 1
-            total -= 10
-
-        self.__hand_total = total
-    
-    def print_hand_total(self):
-        print(colored_text(f"Hand total: {self.__hand_total}", YELLOW))
-
-    def print_hand(self):
-        print(", ".join(str(card) for card in self.cards))
-
-    def receive_card(self, new_card):
-        self.cards.append(new_card)   
-        self.set_hand_total() 
 
     def action(self, deck):
         pass
 
-    def hit(self, deck):
+    def hit(self, deck, hand_index=0):
         print(colored_text("Hit!", YELLOW))
+
         card = deck.pop()
         card.state = "show"
-        self.receive_card(card)
-        self.print_hand()
-        self.print_hand_total()
 
-        if self.get_hand_total() == 21:
+        current_hand = self.hands[hand_index]
+        current_hand.add_card(card)
+        self.hands[hand_index] = current_hand
+        self.print_hand()
+        self.hands[hand_index].get_hand_total_text()
+
+        if current_hand.get_total() == 21:
             print(colored_text(f"{self.name} has 21!!", GREEN))
-        elif self.get_hand_total() > 21:
-                print(colored_text(f"{self.name} has BUSTED!!", RED))
+        elif current_hand.get_total() > 21:
+            print(colored_text(f"{self.name} has BUSTED!!", RED))
 
     def stay(self):
         print("Stand.")
 
     def check_blackjack(self):
-        if len(self.cards) == 2 and self.get_hand_total() == 21:
+        current_hand = self.hands[0]
+        if len(current_hand.cards) == 2 and current_hand.get_total() == 21:
             print(
                 colored_text(
                     f"{self.name} has Blackjack!!",
                     GREEN
                 )
             ) 
-    def check_blackjack_boolean(self):
-        return len(self.cards) == 2 and self.get_hand_total() == 21
+    def check_blackjack_boolean(self, hand_index=0):
+        current_hand = self.hands[hand_index]
+        return len(current_hand.cards) == 2 and current_hand.get_total() == 21 and self.total_hands() == 1
+
+    def total_hands(self):
+        return len(self.hands)
+
+    def print_seat_name(self):
+        pass
+    
+    def print_hand(self):
+        pass
+
 
 
     

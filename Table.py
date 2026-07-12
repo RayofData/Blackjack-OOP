@@ -24,8 +24,13 @@ class Table:
 
 
     def print_table(self):
-        for i in range(len(self.persons)):
-            print(f"Seat {i+1}: {self.persons[i]}")
+
+        for i in range(self.current_table_size()):
+            person = self.persons[i]
+            if i == 0:
+                print(colored_text(f"Seat {i+1}: Dealer {person.name}", YELLOW))
+            else:
+                print(f"Seat {i+1}: {person.name}\t Pot: ${person.total}")
 
     def current_table_size(self):
         return len(self.persons)

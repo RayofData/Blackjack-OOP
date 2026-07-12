@@ -1,17 +1,21 @@
 from Player import Player
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class Dealer(Player):
-    def __init__(self, name, cards=None, seat=1):
-        if cards is None:
-            cards = []
+    def __init__(self, name, hands, seat=1):
+        super().__init__(name, hands, seat)
 
-        super().__init__(name, cards, seat)
+    def print_seat_name(self):
+         print(colored_text(f"Dealer: {self.name}", BLUE))
 
-    def __str__(self):
-        cards_text = ", ".join(str(card) for card in self.cards)
-        return f"Dealer: {self.name}, Cards: {cards_text}"
+    def print_hand(self):
+        current_hand = self.hands[0]
+        print(colored_text(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}", BLUE))
 
     def action(self, deck):
-        self.set_hand_total()
-        while self.get_hand_total() < 17:
+        hand = self.hands[0]
+        total = hand.get_total()
+        while total < 17:
             self.hit(deck)
+            hand = self.hands[0]
+            total = hand.get_total()

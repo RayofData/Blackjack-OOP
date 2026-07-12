@@ -1,3 +1,7 @@
+from colorama import just_fix_windows_console
+
+just_fix_windows_console()
+
 RESET = "\033[0m"
 BOLD = "\033[1m"
 

@@ -2,14 +2,15 @@ from BettingPlayer import BettingPlayer
 import random
 
 class NPCPlayer(BettingPlayer):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0):
-        if cards is None:
-            cards = []
-        super().__init__(name, seat, total, cards, hand_total, bet, insurance_bet)
+    def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
+        super().__init__(name, hands, seat, total, bet, insurance_bet)
 
-    def __str__(self):
-        cards_text = ", ".join(str(card) for card in self.cards)
-        return f"NPC: {self.name}\tPot: ${self.total}\nCards: {cards_text}\tHand total: {self.get_hand_total()}"
+    def print_seat_name(self):
+         print(f"NPC: {self.name}")
+
+    def print_hand(self):
+        current_hand = self.hands[0]
+        print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
 
     def ask_bet(self):
         bet = random.randint(1,3)*5
@@ -18,12 +19,14 @@ class NPCPlayer(BettingPlayer):
         self.place_bet(bet)
     
     def action(self, deck):
-        if self.get_hand_total() in range(9, 12):
+        if self.hands[0] in range(9, 12):
             self.double_down(deck)
             return
 
-        while self.get_hand_total() <= 15:
+        while self.hands[0].get_hand_total() <= 15:
             self.hit(deck)
+        if self.hands[0].get_hand_total() > 21:
+            return
         self.stay()
 
     def ask_insurance(self):
