@@ -13,9 +13,9 @@ class Dealer(Player):
         print(colored_text(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}", BLUE))
 
     def action(self, deck):
-        hand = self.hands[0]
-        total = hand.get_total()
-        while total < 17:
+        hand_total = self.hands[0].get_hand_total()
+        while hand_total < 17:
             self.hit(deck)
-            hand = self.hands[0]
-            total = hand.get_total()
+            hand_total = self.hands[0].get_hand_total()
+        if 17 < hand_total < 22:
+            self.stay()
