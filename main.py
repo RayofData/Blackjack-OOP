@@ -1,4 +1,5 @@
 from Table import Table
+from Room import Room
 from Dealer import Dealer
 from HumanPlayer import HumanPlayer
 from NPCPlayer import NPCPlayer
@@ -25,6 +26,7 @@ print("Each player begins with the same starting balance.")
 starting_balance = int(
     input("Enter the starting balance for each player: $")
 )
+room = Room(starting_balance)
 
 ##### Players creation #####
 # Human players
@@ -189,7 +191,7 @@ while table.current_table_size() > 1:
     ##### Exit Table #####
     for current_player in table.persons[1:]:
         if current_player.total < 5:
-            table.leave_table(current_player.seat)
+            table.leave_table(current_player.seat, room)
             
     for seat, current_player in enumerate(table.persons, start=1):
         current_player.seat = seat
@@ -210,9 +212,13 @@ while table.current_table_size() > 1:
         elif not 1 <= seat <= table.current_table_size():
             print(colored_text("That seat does not exist.", RED))
         else:
-            table.leave_table(seat)
+            table.leave_table(seat, room)
 
             for i, current_player in enumerate(table.persons, start=1):
                 current_player.seat = i
+        if table.current_table_size() > 0:
+            leave = input("Should another player leave? Y/N: ")
+        else:
+            break
 
-        leave = input("Should another player leave? Y/N: ")
+room.print_results()
