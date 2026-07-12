@@ -31,26 +31,41 @@ class HumanPlayer(BettingPlayer):
 
 
     def action(self, deck):
-
-        if len(self.cards) == 2 and self.cards[0].get_rank() == self.cards[1].get_rank():
+        pair = len(self.cards) == 2 and self.cards[0].get_rank() == self.cards[1].get_rank()
+        if pair:
             split = input(colored_text("Split? Y/N ", YELLOW))
             if split.strip().lower().startswith("y"):
                 self.split(deck)
 
         self.print_hand_total()
+
         action = input(
-            "1. Hit\n2. Stand\n3. Double Down\nChoose an action: "
-)
+            "1. Hit\n"
+            "2. Stand\n"
+            "3. Double Down\n"
+            "Choose an action: "
+        )
 
         if action.strip().lower().startswith(("d", "3")):
-            self.double_down(deck)
-            return
+            if self.double_down(deck):
+                pass
+            else: 
+                action = input(
+                "1. Hit\n"
+                "2. Stand\n"
+                "Choose an action: "
+            )
 
         while action.strip().lower().startswith(("h", "1")):
             self.hit(deck)
-    
+
             if self.get_hand_total() >= 21:
-                return
-            action = input("1. Hit\n2. Stand\nChoose an action:  ")
+                break
+
+            action = input(
+                "1. Hit\n"
+                "2. Stand\n"
+                "Choose an action: "
+            )
+
         self.stay()
-    
