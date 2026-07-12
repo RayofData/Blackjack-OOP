@@ -128,25 +128,27 @@ while table.current_table_size() > 1:
     ##### Winners for dealer blackjack #####
     if dealer_blackjack:
         hidden_card.state = "show"
-        dealer_hand.set_hand_total()
+        dealer_hand.set_total()
 
         print(colored_text("Dealer has Blackjack!", RED))
         print(colored_text(str(dealer_seat), BLUE))
 
         for current_player in table.persons[1:]:
-            player_total = current_player.get_hand_total()
+            for i in range(current_player.total_hands()):
+                current_hand = current_player.hands[i]
+                player_total = current_hand.get_hand_total()
 
-            # Resolve insurance separately
-            if current_player.insurance_bet > 0:
-                insurance_payout = current_player.insurance_bet * 3
-                current_player.total += insurance_payout
+                # Resolve insurance separately
+                if current_player.insurance_bet > 0:
+                    insurance_payout = current_player.insurance_bet * 3
+                    current_player.total += insurance_payout
 
-                print(colored_text(
-                    f"{current_player.name} wins the insurance bet. "
-                    f"Payout: ${insurance_payout:.2f}.",
-                    GREEN
-                ))
-                pass
+                    print(colored_text(
+                        f"{current_player.name} wins the insurance bet. "
+                        f"Payout: ${insurance_payout:.2f}.",
+                        GREEN
+                    ))
+                    pass
 
             # Resolve the main hand
             if current_player.check_blackjack_boolean() and current_player.total_hands() == 1:
@@ -171,85 +173,85 @@ while table.current_table_size() > 1:
             for i in range(current_player.total_hands()):
                 current_hand = current_player.hands[i]
                 current_hand_total = current_hand.get_hand_total()
-                print(colored_text(str(dealer_seat.name), BLUE))
+                table.persons[0].print_hand()
                 current_player.print_hand()
 
                 if current_hand_total != 21:
                     current_player.action(play_deck)
 
         ##### Dealer's Turn #####
-        dealer.cards[0].state = "show"
-        print(colored_text(dealer, BLUE))
-        print(colored_text(dealer.get_hand_total(), BLUE))
+        dealer_hand.cards[0].state = "show"
+        dealer_hand.get_hand_text()
         dealer_seat.action(play_deck)
-        dealer_hand.set_hand_total()
-        dealer_total = dealer.get_hand_total()
+        updated_hand = dealer_seat.hands[0]
+        updated_hand.set_total()
+        dealer_total = updated_hand.get_total()
 
 
         ##### Winnings #####
         for current_player in table.persons[1:]:
             current_player.print_hand()
+            for i in range(current_player.total_hands()):
+                current_hand = current_player.hands[i]
+                player_total = current_hand.get_hand_total()
+                bet = current_player.bet + current_player.insurance_bet
 
-            player_total = current_player.get_hand_total()
-            bet = current_player.bet + current_player.insurance_bet
+                if current_player.check_blackjack_boolean():
+                    payout = bet * 2.5
+                    current_player.total += payout
 
-            if current_player.check_blackjack_boolean():
-                payout = bet * 2.5
-                current_player.total += payout
+                    print(colored_text(
+                        f"{current_player.name} WINS with Blackjack! "
+                        f"3:2 Payout: ${payout:.2f}.",
+                        GREEN
+                    ))
 
-                print(colored_text(
-                    f"{current_player.name} WINS with Blackjack! "
-                    f"3:2 Payout: ${payout:.2f}.",
-                    GREEN
-                ))
+                elif player_total > 21:
+                    print(colored_text(
+                        f"{current_player.name} BUSTED with {player_total} "
+                        f"and loses ${bet}.",
+                        RED
+                    ))
 
-            elif player_total > 21:
-                print(colored_text(
-                    f"{current_player.name} BUSTED with {player_total} "
-                    f"and loses ${bet}.",
-                    RED
-                ))
+                elif dealer_total > 21:
+                    payout = bet * 2
+                    current_player.total += payout
 
-            elif dealer_total > 21:
-                payout = bet * 2
-                current_player.total += payout
+                    print(colored_text(
+                        f"{current_player.name} WINS with {player_total} "
+                        f"because the dealer busted. Payout: ${payout}.",
+                        GREEN
+                    ))
 
-                print(colored_text(
-                    f"{current_player.name} WINS with {player_total} "
-                    f"because the dealer busted. Payout: ${payout}.",
-                    GREEN
-                ))
+                elif player_total < dealer_total:
+                    print(colored_text(
+                        f"{current_player.name} LOST with {player_total} "
+                        f"against the dealer's {dealer_total} and loses ${bet}.",
+                        RED
+                    ))
 
-            elif player_total < dealer_total:
-                print(colored_text(
-                    f"{current_player.name} LOST with {player_total} "
-                    f"against the dealer's {dealer_total} and loses ${bet}.",
-                    RED
-                ))
+                elif player_total == dealer_total:
+                    current_player.total += bet
 
-            elif player_total == dealer_total:
-                current_player.total += bet
+                    print(colored_text(
+                        f"{current_player.name} PUSHED with {player_total} "
+                        f"and receives the ${bet} bet back.",
+                        YELLOW
+                    ))
 
-                print(colored_text(
-                    f"{current_player.name} PUSHED with {player_total} "
-                    f"and receives the ${bet} bet back.",
-                    YELLOW
-                ))
+                else:
+                    payout = bet * 2
+                    current_player.total += payout
 
-            else:
-                payout = bet * 2
-                current_player.total += payout
-
-                print(colored_text(
-                    f"{current_player.name} WINS with {player_total} "
-                    f"against the dealer's {dealer_total}. Payout: ${payout}.",
-                    GREEN
-                ))
+                    print(colored_text(
+                        f"{current_player.name} WINS with {player_total} "
+                        f"against the dealer's {dealer_total}. Payout: ${payout}.",
+                        GREEN
+                    ))
 
     ##### Table Reset ######
     for current_player in table.persons:
-        current_player.cards.clear()
-        current_player.set_hand_total()
+        current_player.hands = [Hand()]
 
     for current_player in table.persons[1:]:
         current_player.bet = 0
