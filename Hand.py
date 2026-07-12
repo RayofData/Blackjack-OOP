@@ -27,10 +27,10 @@ class Hand:
     def get_total(self):
         return self.__hand_total
 
-    def print_hand_total(self):
-        print(colored_text(f"Hand total: {self.__hand_total}", YELLOW))
+    def get_hand_total_text(self):
+        return (colored_text(f"Hand total: {self.__hand_total}", YELLOW))
 
-    def print_hand(self):
-        print(", ".join(str(card) for card in self.cards))
+    def get_hand_text(self):
+        return f", ".join(str(card) for card in self.cards)
 
 
