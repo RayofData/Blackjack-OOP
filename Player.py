@@ -17,8 +17,9 @@ class Player:
 
         current_hand = self.hands[hand_index]
         current_hand.add_card(card)
-        current_hand.get_hand_text()
-        current_hand.get_hand_total_text()
+        self.hands[hand_index] = current_hand
+        self.print_hand()
+        self.hands[hand_index].get_hand_total_text()
 
         if current_hand.get_total() == 21:
             print(colored_text(f"{self.name} has 21!!", GREEN))
