@@ -5,11 +5,11 @@ class NPCPlayer(BettingPlayer):
     def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
         super().__init__(name, hands, seat, total, bet, insurance_bet)
 
-    def __str__(self):
+    def print_hand(self):
         print(f"NPC: {self.name}\tPot: ${self.total}")
         for i in range(self.total_hands()):
             current_hand = self.hands[i]
-            print(f"Cards: {current_hand.get_hand()}\t{current_hand.get_total()}")
+            print(f"Cards: {current_hand.get_hand_text()}\t{current_hand.get_hand_total_text()}")
 
     def ask_bet(self):
         bet = random.randint(1,3)*5
@@ -18,11 +18,11 @@ class NPCPlayer(BettingPlayer):
         self.place_bet(bet)
     
     def action(self, deck):
-        if self.get_hand_total() in range(9, 12):
+        if self.hands[0] in range(9, 12):
             self.double_down(deck)
             return
 
-        while self.get_hand_total() <= 15:
+        while self.hands[0].get_hand_total() <= 15:
             self.hit(deck)
         self.stay()
 
