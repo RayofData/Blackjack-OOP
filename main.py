@@ -216,7 +216,7 @@ while table.current_table_size() > 1:
 
             for i, current_player in enumerate(table.persons, start=1):
                 current_player.seat = i
-        if table.current_table_size() > 0:
+        if table.current_table_size() > 1:
             leave = input("Should another player leave? Y/N: ")
         else:
             break
