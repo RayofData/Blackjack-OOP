@@ -1,3 +1,5 @@
+from styling import colored_text, RED, GREEN, YELLOW, BLUE
+
 class Table:
     def __init__(self, persons=None, table_size=6):
         self.persons = [] if persons is None else persons
@@ -10,7 +12,12 @@ class Table:
             print("Table is full.")
 
     def leave_table(self, seat):
-        self.persons.pop(seat-1)
+        person = self.persons[seat - 1]
+        if person.total < 5:
+            print(colored_text(f"{person.name} LOST.", RED))
+        else:
+            print(colored_text(f"{person.name} leaves with ${person.total}.", YELLOW))
+        self.persons.pop(seat - 1)
 
     def print_table(self):
         for i in range(len(self.persons)):
