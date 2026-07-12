@@ -2,14 +2,14 @@ from BettingPlayer import BettingPlayer
 import random
 
 class NPCPlayer(BettingPlayer):
-    def __init__(self, name, seat, total, cards=None, hand_total=0, bet=0, insurance_bet=0):
-        if cards is None:
-            cards = []
-        super().__init__(name, seat, total, cards, hand_total, bet, insurance_bet)
+    def __init__(self, name, seat, hands, total, bet=0, insurance_bet=0 ):
+        super().__init__(name, seat, hands, total, bet, insurance_bet)
 
     def __str__(self):
-        cards_text = ", ".join(str(card) for card in self.cards)
-        return f"NPC: {self.name}\tPot: ${self.total}\nCards: {cards_text}\tHand total: {self.get_hand_total()}"
+        print(f"NPC: {self.name}\tPot: ${self.total}")
+        for i in range(self.total_hands()):
+            current_hand = self.hands[i]
+            print(f"Cards: {current_hand.get_hand()}\t{current_hand.get_total()}")
 
     def ask_bet(self):
         bet = random.randint(1,3)*5
