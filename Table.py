@@ -30,7 +30,16 @@ class Table:
             if i == 0:
                 print(colored_text(f"Seat {i+1}: Dealer {person.name}", YELLOW))
             else:
-                print(f"Seat {i+1}: {person.name}\t Pot: ${person.total}")
+                print(f"Seat {i+1}: {person.name}\t Pot: ${person.total:.2f}")
+
+    def print_table_hands(self):
+        for i in range(self.current_table_size()):
+            person = self.persons[i]
+            hand = person.hands[0]
+            if i == 0:
+                print(colored_text(f"Dealer: {hand.get_hand_text()}", BLUE))
+            else:
+                print(f"{person.name}: {hand.get_hand_text()}")
 
     def current_table_size(self):
         return len(self.persons)
