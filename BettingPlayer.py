@@ -21,6 +21,8 @@ class BettingPlayer(Player):
         # split into two hands and double bet 
 
     def double_down(self, deck):
-        self.bet *= 2
-        self.hit(deck) 
+        if self.total >= self.bet:
+            self.total -= self.bet
+            self.bet *= 2
+            self.hit(deck)
 
