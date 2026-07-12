@@ -1,5 +1,6 @@
 from Table import Table
 from Room import Room
+from Hand import Hand
 from Dealer import Dealer
 from HumanPlayer import HumanPlayer
 from NPCPlayer import NPCPlayer
@@ -9,7 +10,7 @@ import random
 
 ##### Dealer #####
 random.shuffle(dealers)
-dealer = Dealer(dealers[0]) # seat 1
+dealer = Dealer(dealers[0], [Hand()]) # seat 1
 
 ##### Create Table #####
 table = Table([dealer])
