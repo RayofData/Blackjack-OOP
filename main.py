@@ -53,7 +53,7 @@ for i in range(num_players):
 
 # NPC players
 max_npcs = table.table_size - table.current_table_size()
-num_npcs = int(input(f"How many NPC players are joining? Maximum: {max_npcs} "))
+num_npcs = int(input(f"How many NPC players are joining? (Maximum {max_npcs}) "))
 random.shuffle(npc_names)
 
 i = 0
@@ -172,6 +172,8 @@ while table.current_table_size() > 1:
         ##### Actions for hit, stay, double down and split #####
         for current_player in table.persons[1:]:
             current_player.print_seat_name()
+            # current_player.check_split(play_deck)
+
             for i in range(current_player.total_hands()):
                 current_hand = current_player.hands[i]
                 current_hand_total = current_hand.get_hand_total()
@@ -214,9 +216,10 @@ while table.current_table_size() > 1:
                     ))
 
                 elif player_total > 21:
+                    loses = bet + insurance_lose
                     print(colored_text(
                         f"{current_player.name} BUSTED with {player_total} "
-                        f"and loses ${bet:.2f}.",
+                        f"and loses ${loses:.2f}.",
                         RED
                     ))
 
@@ -252,7 +255,7 @@ while table.current_table_size() > 1:
 
                     print(colored_text(
                         f"{current_player.name} WINS with {player_total} "
-                        f"against the dealer's {dealer_total}. Payout: ${payout}.",
+                        f"against the dealer's {dealer_total}. Payout: ${payout:.2f}.",
                         GREEN
                     ))
 

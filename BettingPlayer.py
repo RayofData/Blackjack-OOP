@@ -1,4 +1,5 @@
 from Player import Player
+from Hand import Hand
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class BettingPlayer(Player):
@@ -19,9 +20,22 @@ class BettingPlayer(Player):
         self.bet = bet
         self.total -= self.bet 
 
-    def split(self, deck):
-        pass
-        # split into two hands and double bet 
+    # def check_split(self, deck):
+    #     pass
+
+    # def split(self, deck):
+    #     hand = self.hands[0]
+    #     card1 = Hand(hand.cards[0])
+    #     card2 = Hand(hand.cards[1])
+    #     self.hands = [
+    #         Hand(cards=[card1]),
+    #         Hand(cards=[card2])
+    #     ]
+    #     self.total -= self.bet
+    #     for i in range(self.total_hands()):
+    #         hand = self.hands[i]
+    #         hand.get_hand_text()
+    #         self.action(deck, i)
 
     def double_down(self, deck):
         if self.total >= self.bet:

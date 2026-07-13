@@ -18,11 +18,11 @@ class NPCPlayer(BettingPlayer):
             bet = self.total                   
         self.place_bet(bet)
     
+
     def action(self, deck):
         if self.hands[0] in range(9, 12):
             self.double_down(deck)
             return
-
         while self.hands[0].get_hand_total() <= 15:
             self.hit(deck)
         if self.hands[0].get_hand_total() > 21:
