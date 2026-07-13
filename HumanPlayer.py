@@ -14,36 +14,43 @@ class HumanPlayer(BettingPlayer):
 
     def ask_bet(self):
         while self.bet == 0:
-            try:
-                bet = float(input(f"Minimal bet 5\n{self.name} Enter a bet: $"))
-            except ValueError:
-                print(colored_text("Bet must be an integer.", RED))
-                continue
+            user_input = input(
+                f"{self.name}, enter a bet or press Enter for Minimum bet $5: $"
+            ).strip()
+
+            if user_input == "" and self.total >= 5:
+                bet = 5.0
+            else:
+                try:
+                    bet = float(user_input)
+                except ValueError:
+                    print(colored_text("Bet must be a number.", RED))
+                    continue
 
             if bet < 5:
-                print(colored_text("Must be an amount of 5 or more.", RED))
+                print(colored_text("Bet must be $5 or more.", RED))
             elif bet > self.total:
                 print(colored_text(
-                    f"Bet must be less than total pot of ${self.total:.2f}",
+                    f"Bet cannot exceed your balance of ${self.total:.2f}.",
                     RED
                 ))
             else:
                 self.place_bet(bet)
 
+    # def check_split(self, deck):
+    #     starting_hand = self.hands[0]
+    #     card1 = starting_hand.cards[0].get_rank()
+    #     card2 = starting_hand.cards[1].get_rank()
+    #     pair = card1 == card2
+    #     starting_hand.get_hand_text()
+    #     if pair:
+    #         split = input(colored_text("Split? Y/N ", YELLOW))
+    #         if split.strip().lower().startswith("y"):
+    #             self.split(deck)
+                
 
-    def action(self, deck):
-
-        starting_hand = self.hands[0]
-        card1 = starting_hand.cards[0].get_rank()
-        card2 = starting_hand.cards[1].get_rank()
-        pair = card1 == card2
-
-        if pair:
-            split = input(colored_text("Split? Y/N ", YELLOW))
-            if split.strip().lower().startswith("y"):
-                self.split(deck)
-
-        starting_hand.get_hand_total_text()
+    def action(self, deck, hand_index=0):
+        self.hands[hand_index].get_hand_total_text()
 
         action = input(
             "1. Hit\n"
