@@ -18,6 +18,7 @@ class Player:
         current_hand = self.hands[hand_index]
         current_hand.add_card(card)
         self.hands[hand_index] = current_hand
+        print()
         self.print_hand()
         self.hands[hand_index].get_hand_total_text()
 
@@ -25,9 +26,10 @@ class Player:
             print(colored_text(f"{self.name} has 21!!", GREEN))
         elif current_hand.get_total() > 21:
             print(colored_text(f"{self.name} has BUSTED!!", RED))
+            print()
 
     def stay(self):
-        print("Stand.")
+        print("Stand.\n")
 
     def check_blackjack(self):
         current_hand = self.hands[0]

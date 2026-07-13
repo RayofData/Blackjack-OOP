@@ -94,4 +94,4 @@ class HumanPlayer(BettingPlayer):
         if insurance.strip().lower().startswith("y"):
             self.set_insurance_bet()
         else:
-            print("No insurance.")
+            print(f"{self.name} purchased No insurance.")
