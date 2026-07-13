@@ -1,5 +1,6 @@
 from BettingPlayer import BettingPlayer
 import random
+import time
 
 class NPCPlayer(BettingPlayer):
     def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
@@ -20,18 +21,29 @@ class NPCPlayer(BettingPlayer):
     
 
     def action(self, deck):
-        if self.hands[0] in range(9, 12):
+        time.sleep(1)
+
+        if self.hands[0].get_hand_total() in range(9, 12):
+            time.sleep(0.5)
             self.double_down(deck)
             return
+
         while self.hands[0].get_hand_total() <= 15:
+            time.sleep(0.75)
             self.hit(deck)
+
         if self.hands[0].get_hand_total() > 21:
             return
+
+        time.sleep(0.75)
         self.stay()
+        time.sleep(1)
 
     def ask_insurance(self):
         insurance = random.random()
         if insurance > 0.5:
             self.set_insurance_bet()
+        else: 
+            print(f"{self.name} purchased No insurance")
             
      

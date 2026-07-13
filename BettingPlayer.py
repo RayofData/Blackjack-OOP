@@ -51,4 +51,4 @@ class BettingPlayer(Player):
     def set_insurance_bet(self):
         self.insurance_bet = self.bet*0.5
         self.total -= self.insurance_bet
-        print(f"{self.name} purchases insurance.")
+        print(f"{self.name} purchases insurance for ${self.insurance_bet:.2f}.")
