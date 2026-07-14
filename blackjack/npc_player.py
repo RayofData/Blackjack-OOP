@@ -1,4 +1,4 @@
-from BettingPlayer import BettingPlayer
+from blackjack.betting_player import BettingPlayer
 import random
 import time
 

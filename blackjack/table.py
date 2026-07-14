@@ -1,5 +1,5 @@
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
-from Room import Room
+from blackjack.room import Room
 
 class Table:
     def __init__(self, persons=None, table_size=6):

@@ -1,4 +1,4 @@
-from Player import Player
+from blackjack.player import Player
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 import random
 import time

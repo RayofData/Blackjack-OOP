@@ -1,20 +1,25 @@
-from Table import Table
-from Room import Room
-from Hand import Hand
-from Dealer import Dealer
-from HumanPlayer import HumanPlayer
-from NPCPlayer import NPCPlayer
+from blackjack.table import Table
+from blackjack.room import Room
+from blackjack.deck import create_deck
+from blackjack.hand import Hand
+from blackjack.dealer import Dealer
+from blackjack.human_player import HumanPlayer
+from blackjack.npc_player import NPCPlayer
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
-from helper import deck, dealers, npc_names
+from constants import DEALERS, NPC_NAMES
 import random
 
 ##### Dealer #####
+dealers = DEALERS
 random.shuffle(dealers)
 dealer = Dealer(dealers[0], [Hand()]) # seat 1
 
 ##### Create Table #####
 table = Table([dealer])
 available_seats = table.table_size - table.current_table_size()
+
+##### Create Deck #####
+deck = create_deck()
 
 ##### Welcome Message ######
 print(colored_text("Welcome to Ray's Blackjack!", YELLOW))
@@ -54,6 +59,7 @@ for i in range(num_players):
 # NPC players
 max_npcs = table.table_size - table.current_table_size()
 num_npcs = int(input(f"How many NPC players are joining? (Maximum {max_npcs}) "))
+npc_names = NPC_NAMES
 random.shuffle(npc_names)
 
 i = 0

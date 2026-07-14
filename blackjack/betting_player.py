@@ -1,5 +1,5 @@
-from Player import Player
-from Hand import Hand
+from blackjack.player import Player
+from blackjack.hand import Hand
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
 
 class BettingPlayer(Player):

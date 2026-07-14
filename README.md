@@ -1,11 +1,10 @@
 # Blackjack OOP
 
-A command-line Blackjack game built independently in Python to practice object-oriented programming, inheritance, polymorphism, and separation of responsibilities.
+A command-line Blackjack game built independently in Python to practice object-oriented programming, inheritance, polymorphism, composition, and separation of responsibilities.
 
-The application supports human and computer-controlled players, betting, dealer behavior, hand evaluation, insurance, double down, payouts, and multiple rounds of gameplay.
+The game supports human and computer-controlled players, betting, dealer behavior, hand evaluation, insurance, double down, payouts, and multiple rounds of gameplay.
 
 ## Screenshots
-
 ### Game Setup
 
 ![Blackjack game setup](assets/start-game.png)
@@ -14,20 +13,25 @@ The application supports human and computer-controlled players, betting, dealer 
 
 ![Blackjack gameplay](assets/gameplay.png)
 
+### End Round
+
+![Blackjack end of round](assets/round-end.png)
+
 ## Features
 
-* Human and NPC players
-* Multiple players at one table
-* Player balance and betting system
-* Hit and stand actions
-* Double down
-* Insurance
-* Blackjack detection
-* Automatic Ace value adjustment
-* Dealer behavior based on standard Blackjack rules
-* Win, loss, push, and Blackjack payout handling
-* Colored terminal output
-* Final player results when leaving the table
+- Human and NPC players
+- Multiple players at one table
+- Player balances and betting
+- Hit and stand actions
+- Double down
+- Insurance
+- Blackjack detection
+- Automatic Ace value adjustment
+- Dealer behavior based on standard Blackjack rules
+- Win, loss, push, and Blackjack payout handling
+- Colored terminal output
+- Multiple rounds of gameplay
+- Final player results when leaving the table
 
 ## Object-Oriented Design
 
@@ -43,66 +47,77 @@ Player
 
 ### Inheritance and Polymorphism
 
-`Player` defines shared player behavior, including drawing cards, standing, counting hands, and checking for Blackjack.
+`Player` defines shared behavior such as drawing cards, standing, counting hands, and checking for Blackjack.
 
-`Dealer` and `BettingPlayer` extend the base `Player` class. `HumanPlayer` and `NPCPlayer` then extend `BettingPlayer` and implement their own betting and gameplay decisions.
+`Dealer` and `BettingPlayer` inherit from `Player`. `HumanPlayer` and `NPCPlayer` then inherit from `BettingPlayer` and provide their own betting and gameplay decisions.
 
-Methods such as `action()`, `print_hand()`, and `print_seat_name()` are implemented differently depending on the player type. This allows the main game loop to work with different player objects through a shared interface.
+Methods such as `action()`, `print_hand()`, and `print_seat_name()` behave differently depending on the player type. This allows the game loop to work with several types of player objects through a shared structure.
+
+### Composition
+
+The game also uses composition:
+
+- A `Table` contains player objects.
+- A `Player` contains one or more `Hand` objects.
+- A `Hand` contains `Card` objects.
 
 ### Separation of Responsibilities
 
-| Class           | Responsibility                                                    |
-| --------------- | ----------------------------------------------------------------- |
-| `Card`          | Stores a card's rank, suit, value, and visibility                 |
-| `Hand`          | Stores cards and calculates hand totals, including Ace adjustment |
-| `Player`        | Defines shared player actions and Blackjack checks                |
-| `BettingPlayer` | Manages balances, bets, insurance, and double down                |
-| `HumanPlayer`   | Handles user input and player decisions                           |
-| `NPCPlayer`     | Handles automated betting and gameplay decisions                  |
-| `Dealer`        | Applies dealer-specific gameplay rules                            |
-| `Table`         | Manages seats and active players                                  |
-| `Room`          | Tracks players who leave and displays final results               |
-
-The game uses composition alongside inheritance:
-
-* A `Table` contains player objects.
-* A `Player` contains one or more `Hand` objects.
-* A `Hand` contains `Card` objects.
+| File or class | Responsibility |
+| --- | --- |
+| `Card` | Stores a card's rank, suit, value, and visibility |
+| `Hand` | Stores cards and calculates hand totals, including Ace adjustment |
+| `Player` | Defines shared player actions and Blackjack checks |
+| `BettingPlayer` | Manages balances, bets, insurance, and double down |
+| `HumanPlayer` | Handles user input and player decisions |
+| `NPCPlayer` | Handles automated betting and gameplay decisions |
+| `Dealer` | Applies dealer-specific gameplay rules |
+| `Table` | Manages seats and active players |
+| `Room` | Tracks players who leave and displays final results |
+| `deck.py` | Creates a standard 52-card deck |
+| `constants.py` | Stores card values and available dealer and NPC names |
+| `styling.py` | Provides colored terminal text using `colorama` |
+| `main.py` | Runs setup, gameplay, payouts, resets, and player exits |
 
 ## Refactoring Experience
 
-The original design stored cards directly on each player. During development, the project was refactored so players contain `Hand` objects instead.
+The original design stored cards directly on each player. During development, the project was refactored so that players contain `Hand` objects and each hand contains `Card` objects.
 
-This improved separation of responsibilities by moving card collection and hand-total calculations into the `Hand` class. It also created a stronger foundation for supporting multiple hands per player.
+This improved separation of responsibilities by moving card storage and hand-total calculations into the `Hand` class. It also created a stronger foundation for supporting multiple hands per player.
 
-The refactor required changes throughout the game loop, player actions, hand evaluation, and payout logic. Split-hand gameplay was explored during this process but was not completed before the project was shelved.
+The refactor required changes throughout the game loop, player actions, hand evaluation, and payout logic. Split-hand gameplay was explored but was not completed before the project was shelved.
+
+The deck-building logic and reusable values were later separated into `deck.py` and `constants.py` to reduce repetition and make the project easier to maintain.
 
 ## Project Structure
 
 ```text
 Blackjack-OOP/
-├── BettingPlayer.py
-├── Card.py
-├── Dealer.py
-├── Hand.py
-├── HumanPlayer.py
-├── NPCPlayer.py
-├── Player.py
-├── Room.py
-├── Table.py
-├── helper.py
-├── main.py
-├── styling.py
+├── blackjack/
+│   ├── betting_player.py
+│   ├── card.py
+│   ├── constants.py
+│   ├── dealer.py
+│   ├── deck.py
+│   ├── hand.py
+│   ├── human_player.py
+│   ├── npc_player.py
+│   ├── player.py
+│   ├── room.py
+│   └── table.py
 ├── assets/
 │   ├── start-game.png
 │   └── gameplay.png
+├── main.py
+├── styling.py
+├── requirements.txt
 └── README.md
 ```
 
 ## Requirements
 
-* Python 3
-* `colorama`
+- Python 3
+- `colorama`
 
 ## Installation
 
@@ -113,12 +128,17 @@ git clone https://github.com/RayofData/Blackjack-OOP.git
 cd Blackjack-OOP
 ```
 
+Install the required package:
+
+```bash
+pip install -r requirements.txt
+```
+
 Run the game:
 
 ```bash
 python main.py
 ```
-
 
 ## How to Play
 
@@ -127,8 +147,9 @@ python main.py
 3. Each player places a bet before cards are dealt.
 4. Human players choose whether to hit, stand, or double down.
 5. NPC players and the dealer take their turns automatically.
-6. The game compares each player's hand against the dealer and calculates payouts.
+6. The game compares each player's hand with the dealer's hand and calculates payouts.
 7. Players may continue playing or leave the table after each round.
+8. Final results are displayed when the game ends.
 
 ## Current Status
 
@@ -138,18 +159,22 @@ The project is not under active development, but it may be revisited for additio
 
 ## Possible Future Improvements
 
-* Complete split-hand action handling
-* Improve NPC decision-making using Blackjack strategy rules
-* Improve input validation
+- Complete split-hand gameplay
+- Improve NPC decisions using Blackjack strategy rules
+- Add bust-probability calculations based on visible cards
+- Create a dedicated `Deck` class to track remaining cards
+- Improve input validation
+- Add automated tests
 
 ## Skills Demonstrated
 
-* Object-oriented Python
-* Inheritance and polymorphism
-* Object composition
-* Separation of responsibilities
-* Multi-file project organization
-* State management
-* Command-line input handling
-* Game-rule implementation
-* Iterative refactoring
+- Object-oriented Python
+- Inheritance and polymorphism
+- Object composition
+- Encapsulation
+- Separation of responsibilities
+- Multi-file package organization
+- State management
+- Command-line input handling
+- Game-rule implementation
+- Iterative refactoring

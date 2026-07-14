@@ -20,6 +20,7 @@ class Player:
         self.hands[hand_index] = current_hand
         print()
         self.print_hand()
+        print()
         self.hands[hand_index].get_hand_total_text()
 
         if current_hand.get_total() == 21:

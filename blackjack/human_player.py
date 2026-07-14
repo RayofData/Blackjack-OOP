@@ -1,5 +1,5 @@
 from styling import colored_text, RED, GREEN, YELLOW, BLUE
-from BettingPlayer import BettingPlayer
+from blackjack.betting_player import BettingPlayer
 
 class HumanPlayer(BettingPlayer):
     def __init__(self, name, hands, seat, total, bet=0, insurance_bet=0 ):
