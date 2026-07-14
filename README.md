@@ -4,6 +4,10 @@ A command-line Blackjack game built independently in Python to practice object-o
 
 The game supports human and computer-controlled players, betting, dealer behavior, hand evaluation, insurance, double down, payouts, and multiple rounds of gameplay.
 
+## Project Reflection
+
+Read about the learning process, design decisions, and refactoring lessons behind this project in my blog post: [OOPS! All Python: Learning Object-Oriented Programming](https://arayofdata.blogspot.com/2026/07/oops-all-python.html).
+
 ## Screenshots
 ### Game Setup
 
